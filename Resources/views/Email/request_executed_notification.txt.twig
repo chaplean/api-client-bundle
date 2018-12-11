@@ -1,0 +1,12 @@
+{{ 'chaplean_api_client.email.request_executed_notification.body.header' | trans }}
+
+{{ 'chaplean_api_client.email.request_executed_notification.body.request_header' | trans }} {{ response.method }} {{ response.url }}
+{{ 'chaplean_api_client.email.request_executed_notification.body.request_body' | trans }} {{ response.method }} {{ response.url }}
+{{ response.data|json_encode }}
+
+{% if response.succeeded %}{{ 'chaplean_api_client.email.request_executed_notification.body.succeeded' | trans }}{% else %}{{ 'chaplean_api_client.email.request_executed_notification.body.failed' | trans }}{% endif %}
+
+{{ 'chaplean_api_client.email.request_executed_notification.body.response_header' | trans }} {{ response.code }}
+{{ 'chaplean_api_client.email.request_executed_notification.body.response_body' | trans }} {{ response.content|json_encode }}
+
+{{ 'chaplean_api_client.email.request_executed_notification.body.footer' | trans }}

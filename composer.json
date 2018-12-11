@@ -1,0 +1,47 @@
+{
+    "name": "chaplean/api-client-bundle",
+    "license": "MIT",
+    "type": "symfony-bundle",
+    "description": "Library to help defining client for rest apis",
+    "authors": [
+        {
+            "name": "Chaplean",
+            "homepage": "http://www.chaplean.coop"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Chaplean\\Bundle\\ApiClientBundle\\": ""
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\Chaplean\\Bundle\\ApiClientBundle\\": "Tests/"
+        }
+    },
+    "require": {
+        "php": ">=7.0.8",
+        "eightpoints/guzzle-bundle": "^7.0",
+        "symfony/config": "^3.0 || ^4.0",
+        "symfony/console": "^3.0 || ^4.0",
+        "symfony/dependency-injection": "^3.0 || ^4.0",
+        "symfony/yaml": "^3.0 || ^4.0"
+    },
+    "require-dev": {
+        "chaplean/coding-standard": "^1.1",
+        "doctrine/doctrine-bundle": "^1.6",
+        "doctrine/orm": "^2.5",
+        "friendsofsymfony/rest-bundle": "^2.0",
+        "mockery/mockery": "dev-master",
+        "php-coveralls/php-coveralls": "^2.1",
+        "phpunit/phpunit": "^7.0",
+        "symfony/http-kernel": "^3.0 || ^4.0",
+        "symfony/swiftmailer-bundle": "^3.0 || ^4.0",
+        "symfony/var-dumper": "^3.0 || ^4.0"
+    },
+    "config": {
+        "bin-dir": "bin",
+        "discard-changes": true,
+        "sort-packages": true
+    }
+}

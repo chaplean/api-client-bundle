@@ -1,0 +1,13 @@
+chaplean_api_client:
+    email:
+        request_executed_notification:
+            subject: 'ApiClientBundle - Request Notification'
+            body:
+                header: 'ApiClientBundle request executed notification'
+                footer: 'Have a good day'
+                request_header: 'The request'
+                request_body: 'with the content:'
+                succeeded: 'ran successfully.'
+                failed:  'failed.'
+                response_header: 'The response status code was'
+                response_body: 'with the content:'

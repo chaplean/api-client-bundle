@@ -1,0 +1,7 @@
+<value attribute="something">
+    <list>
+        <element>1</element>
+        <element>2</element>
+    </list>
+    <value2>something with accents éè</value2>
+</value>

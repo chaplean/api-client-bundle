@@ -1,0 +1,24 @@
+services:
+    _defaults:
+        autowire: true
+        public: true
+
+    Chaplean\Bundle\ApiClientBundle\EventListener\RequestExecutedListener:
+        tags:
+          - { name: kernel.event_listener, event: chaplean_api_client.request_executed, method: onRequestExecuted }
+
+    Chaplean\Bundle\ApiClientBundle\Query\ApiLogQuery:
+        arguments:
+            $registry: '@?doctrine'
+
+    Chaplean\Bundle\ApiClientBundle\Utility\ApiLogUtility:
+        arguments:
+            $parameters: '%chaplean_api_client.config%'
+            $registry: '@?doctrine'
+
+    Chaplean\Bundle\ApiClientBundle\Utility\EmailUtility:
+        arguments:
+            $parameters: '%chaplean_api_client.config%'
+            $mailer: '@?mailer'
+            $translator: '@?translator'
+            $templating: '@?templating.engine.twig'
