@@ -4,6 +4,7 @@ namespace Chaplean\Bundle\ApiClientBundle\Api;
 
 use Chaplean\Bundle\ApiClientBundle\Api\Constraint\CallbackConstraint;
 use Chaplean\Bundle\ApiClientBundle\Api\Parameter\DateTimeParameter;
+use Chaplean\Bundle\ApiClientBundle\Api\Parameter\EnumParameter;
 use Chaplean\Bundle\ApiClientBundle\Api\ParameterConstraintViolation\InvalidTypeViolation;
 use Chaplean\Bundle\ApiClientBundle\Api\ParameterConstraintViolation\MissingParameterViolation;
 use Chaplean\Bundle\ApiClientBundle\Api\Parameter\ArrayParameter;
@@ -280,6 +281,18 @@ class Parameter
     public static function dateTime($format = 'Y-m-d')
     {
         return new DateTimeParameter($format);
+    }
+
+    /**
+     * Construct a Parameter configured to be an enumeration (list of variants)
+     *
+     * @param array $enum
+     *
+     * @return Parameter|EnumParameter
+     */
+    public static function enum(array $enum): Parameter
+    {
+        return new EnumParameter($enum);
     }
 
     /**
