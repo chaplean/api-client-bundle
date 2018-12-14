@@ -24,7 +24,7 @@ class NotValidValueInEnumViolation extends ParameterConstraintViolation
     {
         parent::__construct(
             sprintf(
-                '%s (%s) is not valid. Allowed values: (%s)',
+                '%s (%s) is not valid. Allowed values: [%s]',
                 $actualValue,
                 gettype($actualValue),
                 implode(
