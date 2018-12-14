@@ -29,7 +29,7 @@ class EnumParameter extends Parameter
     {
         parent::__construct();
 
-        if (count($enum) < 2) {
+        if (empty($enum)) {
             throw new EnumRequiresAtLeastTwoVariantsException();
         }
 

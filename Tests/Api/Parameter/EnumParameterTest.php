@@ -32,15 +32,31 @@ class EnumParameterTest extends TestCase
     /**
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::enum
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\EnumParameter::__construct
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\EnumParameter::validate
      *
      * @return void
-     *
-     * @expectedException \Chaplean\Bundle\ApiClientBundle\Exception\EnumRequiresAtLeastTwoVariantsException
-     * @expectedExceptionMessage Enumeration type require at least two variants
      */
-    public function testRequiredAtLeast2ValuesOnlyOne(): void
+    public function testEnumValidWithOnlyOneVariant(): void
     {
-        Parameter::enum([1]);
+        $parameter = Parameter::enum([1]);
+        $parameter->setValue(1);
+
+        $this->assertTrue($parameter->isValid());
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::enum
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\EnumParameter::__construct
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\EnumParameter::validate
+     *
+     * @return void
+     */
+    public function testEnumInvalidWithOnlyOneVariant(): void
+    {
+        $parameter = Parameter::enum([1]);
+        $parameter->setValue(0);
+
+        $this->assertFalse($parameter->isValid());
     }
 
     /**
