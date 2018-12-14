@@ -19,11 +19,6 @@ use Chaplean\Bundle\ApiClientBundle\Api\ParameterConstraintViolationCollection;
 class EnumParameter extends Parameter
 {
     /**
-     * @var array
-     */
-    private $enum;
-
-    /**
      * EnumParameter constructor.
      *
      * @param array $enum
@@ -36,30 +31,12 @@ class EnumParameter extends Parameter
             throw new EnumRequiresAtLeastTwoVariantsException();
         }
 
-        $this->enum = $enum;
-
-        $this->addConstraint(function ($value, ParameterConstraintViolationCollection $violations) {
+        $this->addConstraint(function ($value, ParameterConstraintViolationCollection $violations) use ($enum) {
             if ($value === null) {
                 $violations->add(new MissingParameterViolation(''));
+            } elseif (!in_array($value, $enum, true)) {
+                $violations->add(new NotValidValueInEnumViolation($value, $enum));
             }
         });
-    }
-
-    /**
-     * @return ParameterConstraintViolationCollection
-     */
-    protected function validate(): ParameterConstraintViolationCollection
-    {
-        $violations = parent::validate();
-
-        if (($this->optional && $this->value === null) || !$violations->isEmpty()) {
-            return $violations;
-        }
-
-        if (!in_array($this->value, $this->enum, true)) {
-            $violations->add(new NotValidValueInEnumViolation($this->value, $this->enum));
-        }
-
-        return $violations;
     }
 }

@@ -24,6 +24,6 @@ class NotValidValueInEnumTest extends TestCase
     {
         $violation = new NotValidValueInEnumViolation(1, [2, 3]);
 
-        $this->assertSame('"1" is not valid. Values valid: (2, 3)', $violation->getMessage());
+        $this->assertSame('1 (integer) is not valid. Allowed values: (2 (integer), 3 (integer))', $violation->getMessage());
     }
 }

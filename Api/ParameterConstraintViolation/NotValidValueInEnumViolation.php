@@ -22,10 +22,20 @@ class NotValidValueInEnumViolation extends ParameterConstraintViolation
      */
     public function __construct($actualValue, array $array)
     {
-        parent::__construct(sprintf(
-            '"%s" is not valid. Values valid: (%s)',
-            $actualValue,
-            implode(', ', $array)
+        parent::__construct(
+            sprintf(
+                '%s (%s) is not valid. Allowed values: (%s)',
+                $actualValue,
+                gettype($actualValue),
+                implode(
+                    ', ',
+                    array_map(
+                        function ($element) {
+                            return sprintf('%s (%s)', $element, gettype($element));
+                        },
+                        $array
+                    )
+                )
         ));
     }
 }

@@ -72,4 +72,34 @@ class EnumParameterTest extends TestCase
 
         $this->assertTrue($parameter->isValid());
     }
+
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::enum
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\EnumParameter::__construct
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\EnumParameter::validate
+     *
+     * @return void
+     */
+    public function testValidStrictType(): void
+    {
+        $parameter = Parameter::enum([1, 2]);
+        $parameter->setValue('1');
+
+        $this->assertFalse($parameter->isValid());
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::enum
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\EnumParameter::__construct
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\EnumParameter::validate
+     *
+     * @return void
+     */
+    public function testArrayListEnum(): void
+    {
+        $parameter = Parameter::arrayList(Parameter::enum([1, 2]));
+        $parameter->setValue([1, 2]);
+
+        $this->assertTrue($parameter->isValid());
+    }
 }

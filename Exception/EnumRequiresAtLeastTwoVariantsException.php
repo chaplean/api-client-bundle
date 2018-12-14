@@ -13,7 +13,7 @@ namespace Chaplean\Bundle\ApiClientBundle\Exception;
 class EnumRequiresAtLeastTwoVariantsException extends \InvalidArgumentException
 {
     /**
-     * RequireAtLeastTwoEnumViolation constructor.
+     * EnumRequiresAtLeastTwoVariantsException constructor.
      */
     public function __construct()
     {
