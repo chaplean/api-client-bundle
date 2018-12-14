@@ -21,7 +21,9 @@ class EnumParameter extends Parameter
     /**
      * EnumParameter constructor.
      *
-     * @param array $enum
+     * @param mixed[] $enum
+     *
+     * @throws EnumRequiresAtLeastTwoVariantsException
      */
     protected function __construct(array $enum)
     {
