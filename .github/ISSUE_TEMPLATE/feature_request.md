@@ -7,6 +7,8 @@ assignees: ''
 
 ---
 
+<!-- This is given as gidelines. Feel free to remove or add sections to fit your specific issue. But please keep in mind that the more informations we have the easier it will be to fix the issue! -->
+
 **Is your feature request related to a problem? Please describe.**
 A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
 
