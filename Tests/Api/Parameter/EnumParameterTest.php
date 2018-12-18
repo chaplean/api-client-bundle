@@ -21,10 +21,10 @@ class EnumParameterTest extends TestCase
      *
      * @return void
      *
-     * @expectedException \Chaplean\Bundle\ApiClientBundle\Exception\EnumRequiresAtLeastTwoVariantsException
-     * @expectedExceptionMessage Enumeration type require at least two variants
+     * @expectedException \Chaplean\Bundle\ApiClientBundle\Exception\EnumRequiresAtLeastOneVariantException
+     * @expectedExceptionMessage Enumeration type require at least one variant
      */
-    public function testRequiredAtLeastTwoValuesEmpty(): void
+    public function testRequiredAtLeastOneValuesEmpty(): void
     {
         Parameter::enum([]);
     }

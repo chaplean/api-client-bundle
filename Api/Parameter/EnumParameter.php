@@ -4,7 +4,7 @@ namespace Chaplean\Bundle\ApiClientBundle\Api\Parameter;
 
 use Chaplean\Bundle\ApiClientBundle\Api\Parameter;
 use Chaplean\Bundle\ApiClientBundle\Api\ParameterConstraintViolation\NotValidValueInEnumViolation;
-use Chaplean\Bundle\ApiClientBundle\Exception\EnumRequiresAtLeastTwoVariantsException;
+use Chaplean\Bundle\ApiClientBundle\Exception\EnumRequiresAtLeastOneVariantException;
 use Chaplean\Bundle\ApiClientBundle\Api\ParameterConstraintViolation\MissingParameterViolation;
 use Chaplean\Bundle\ApiClientBundle\Api\ParameterConstraintViolationCollection;
 
@@ -23,14 +23,14 @@ class EnumParameter extends Parameter
      *
      * @param mixed[] $enum
      *
-     * @throws EnumRequiresAtLeastTwoVariantsException
+     * @throws EnumRequiresAtLeastOneVariantException
      */
     protected function __construct(array $enum)
     {
         parent::__construct();
 
         if (empty($enum)) {
-            throw new EnumRequiresAtLeastTwoVariantsException();
+            throw new EnumRequiresAtLeastOneVariantException();
         }
 
         $this->addConstraint(function ($value, ParameterConstraintViolationCollection $violations) use ($enum) {
