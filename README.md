@@ -227,6 +227,7 @@ public function buildApi()
                     ]
                 ),
                 'friends'  => Parameter::arrayList(Parameter::id()),
+                'enum'     => Parameter::enum(['foo', 'bar']),
             ]
         );
 }
