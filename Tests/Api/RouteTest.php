@@ -633,6 +633,7 @@ class RouteTest extends TestCase
 
     /**
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::queryParameters()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::allowExtraQueryParameters()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::bindQueryParameters()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::__construct()
      *
@@ -661,6 +662,41 @@ class RouteTest extends TestCase
         $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
         $route->queryParameters(['value3' => Parameter::int()])->allowExtraQueryParameters();
         $route->bindQueryParameters(['value3' => 3, 'extra' => 'extra']);
+
+        $route->exec();
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::requestParameters()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::allowExtraRequestParameters()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::bindRequestParameters()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::__construct()
+     *
+     * @return void
+     */
+    public function testAllowExtraRequestParameter()
+    {
+        $this->eventDispatcher->shouldReceive('dispatch')->once();
+
+        $this->client->shouldReceive('request')
+            ->once()
+            ->with(
+                'GET',
+                'url',
+                [
+                    'headers' => [],
+                    'query'   => [],
+                    'form_params' => [
+                        'value3' => 3,
+                        'extra'  => 'extra'
+                    ]
+                ]
+            )
+            ->andReturn(new Response());
+
+        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route->requestParameters(['value3' => Parameter::int()])->allowExtraRequestParameters();
+        $route->bindRequestParameters(['value3' => 3, 'extra' => 'extra']);
 
         $route->exec();
     }
