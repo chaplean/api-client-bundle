@@ -93,6 +93,26 @@ class Route
     }
 
     /**
+     * @return self
+     */
+    public function allowExtraQueryParameters(): self
+    {
+        $this->queryParameters->allowExtraField();
+
+        return $this;
+    }
+
+    /**
+     * @return self
+     */
+    public function allowExtraRequestParameters(): self
+    {
+        $this->requestParameters->allowExtraField();
+
+        return $this;
+    }
+
+    /**
      * Configure the route to expect a binary response (which is the default)
      *
      * @return self

@@ -538,4 +538,30 @@ class ObjectParameterTest extends TestCase
         $parameter = Parameter::object(['test' => Parameter::int()->optional()]);
         $this->assertEquals([], $parameter->toArray());
     }
+
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::getParameter
+     *
+     * @return void
+     */
+    public function testGetParameter(): void
+    {
+        $parameter = Parameter::object(['value' => Parameter::int()]);
+        
+        $this->assertInstanceOf(Parameter::class, $parameter->getParameter('value'));
+        $this->assertNull($parameter->getParameter('extra'));
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::getParameter
+     *
+     * @return void
+     */
+    public function testGetParameterWithAllowedExtraField(): void
+    {
+        $parameter = Parameter::object(['value' => Parameter::int()])->allowExtraField();
+
+        $this->assertInstanceOf(Parameter::class, $parameter->getParameter('value'));
+        $this->assertInstanceOf(Parameter::class, $parameter->getParameter('extra'));
+    }
 }

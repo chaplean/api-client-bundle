@@ -165,7 +165,7 @@ class ObjectParameter extends Parameter
             }
 
             foreach ($values as $key => $value) {
-                $parameter = $this->parameters[$key] ?? null;
+                $parameter = $this->getParameter($key);
 
                 if ($parameter !== null) {
                     $parameter = clone $parameter;
@@ -304,5 +304,22 @@ class ObjectParameter extends Parameter
         );
 
         return $this;
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return Parameter|null
+     */
+    public function getParameter(string $key): ?Parameter
+    {
+        $parameter = $this->parameters[$key] ?? null;
+
+        if ($this->allowedExtraField && $parameter === null) {
+            // all extra fields will be a default Parameter without any constraints
+            $parameter = new Parameter();
+        }
+
+        return $parameter;
     }
 }

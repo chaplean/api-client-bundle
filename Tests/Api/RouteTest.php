@@ -631,4 +631,37 @@ class RouteTest extends TestCase
         $route->exec();
     }
 
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::queryParameters()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::bindQueryParameters()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::__construct()
+     *
+     * @return void
+     */
+    public function testAllowExtraQueryParameter()
+    {
+        $this->eventDispatcher->shouldReceive('dispatch')->once();
+
+        $this->client->shouldReceive('request')
+            ->once()
+            ->with(
+                'GET',
+                'url',
+                [
+                    'headers' => [],
+                    'query'   => [
+                        'value3' => 3,
+                        'extra'  => 'extra'
+                    ],
+                    'form_params' => []
+                ]
+            )
+            ->andReturn(new Response());
+
+        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route->queryParameters(['value3' => Parameter::int()])->allowExtraQueryParameters();
+        $route->bindQueryParameters(['value3' => 3, 'extra' => 'extra']);
+
+        $route->exec();
+    }
 }
