@@ -341,6 +341,24 @@ class RouteTest extends TestCase
     /**
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::getUrl()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::__construct()
+     *
+     * @return void
+     */
+    public function testGetUrlWithSuffix()
+    {
+        $globalParameter = new GlobalParameters();
+        $globalParameter->urlSuffix('suffix');
+
+        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, $globalParameter);
+
+        $url = $route->getUrl();
+
+        $this->assertEquals('urlsuffix', $url);
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::getUrl()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::__construct()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::getMethod()
      *
      * @return void

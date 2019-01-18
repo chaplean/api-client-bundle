@@ -221,6 +221,26 @@ class ObjectParameterTest extends TestCase
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::__construct()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::setValue()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::validate()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::allowExtraField
+     *
+     * @return void
+     */
+    public function testAllowExtraData()
+    {
+        $parameter = Parameter::object([
+            'value' => Parameter::bool(),
+        ])->allowExtraField();
+
+        $parameter->setValue(['value' => true, 'extra' => false]);
+
+        $this->assertTrue($parameter->isValid());
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::object()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::__construct()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::setValue()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::validate()
      *
      * @return void
      */

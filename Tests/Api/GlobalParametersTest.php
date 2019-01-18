@@ -230,6 +230,29 @@ class GlobalParametersTest extends TestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\GlobalParameters::urlSuffix()
+     *
+     * @return void
+     */
+    public function testGlobalParametersUrlSuffix()
+    {
+        $globalParameter = new GlobalParameters();
+        $globalParameter->urlSuffix('suffix');
+
+        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
+
+        $this->client->shouldReceive('request')
+            ->once()
+            ->with('POST', 'urlsuffix', ['headers' => [], 'query' => [], 'form_params' => []])
+            ->andReturn(new Response());
+
+        $this->eventDispatcher->shouldReceive('dispatch')
+            ->once();
+
+        $this->assertInstanceOf(PlainResponse::class, $route->exec());
+    }
+
+    /**
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\GlobalParameters::urlParameters()
      *
      * @return void

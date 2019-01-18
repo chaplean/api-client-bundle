@@ -39,6 +39,11 @@ class ObjectParameter extends Parameter
     protected $parameters;
 
     /**
+     * @var boolean
+     */
+    protected $allowedExtraField;
+
+    /**
      * ObjectParameter constructor.
      *
      * @param array $parameters
@@ -50,6 +55,7 @@ class ObjectParameter extends Parameter
         $this->parameters = $parameters;
         $this->requireExactlyParameters = array();
         $this->requireAtLeastParameters = array();
+        $this->allowedExtraField = false;
 
         $this->defaultValue([]);
 
@@ -98,6 +104,16 @@ class ObjectParameter extends Parameter
     }
 
     /**
+     * @return self
+     */
+    public function allowExtraField(): self
+    {
+        $this->allowedExtraField = true;
+
+        return $this;
+    }
+
+    /**
      * @return ParameterConstraintViolationCollection
      */
     protected function validate()
@@ -108,9 +124,12 @@ class ObjectParameter extends Parameter
             return $violations;
         }
 
-        $extraKeys = array_diff(array_keys($this->value), array_keys($this->parameters));
-        if (!empty($extraKeys)) {
-            $violations->add(new ExtraDataViolation($extraKeys));
+        if (!$this->allowedExtraField) {
+            $extraKeys = array_diff(array_keys($this->value), array_keys($this->parameters));
+
+            if (!empty($extraKeys)) {
+                $violations->add(new ExtraDataViolation($extraKeys));
+            }
         }
 
         foreach ($this->parameters as $key => $parameter) {

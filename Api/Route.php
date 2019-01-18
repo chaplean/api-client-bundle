@@ -29,6 +29,9 @@ class Route
     protected $url;
     protected $responseType;
 
+    protected $urlPrefix;
+    protected $urlSuffix;
+
     protected $urlParameters;
     protected $queryParameters;
     protected $headers;
@@ -74,6 +77,7 @@ class Route
         $this->method = $method;
         $this->url = $url;
         $this->urlPrefix = $globalParameters->urlPrefix;
+        $this->urlSuffix = $globalParameters->urlSuffix;
 
         $this->responseType = $globalParameters->responseType;
         $this->urlParameters = $globalParameters->urlParameters;
@@ -219,7 +223,7 @@ class Route
      */
     public function getUrl()
     {
-        return $this->urlPrefix . $this->fillInUrlPlaceholders();
+        return $this->urlPrefix . $this->fillInUrlPlaceholders() . $this->urlSuffix;
     }
 
     /**
