@@ -295,12 +295,12 @@ class ArrayParameterTest extends TestCase
     /**
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::arrayList()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::parameterToArray()
-     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\Parameter::exportForRequest()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::exportForRequest()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ArrayParameter::parameterToArray()
      *
      * @return void
      */
-    public function testToArray()
+    public function testExportForRequest()
     {
         $parameter = Parameter::arrayList(
             Parameter::object([
@@ -331,13 +331,13 @@ class ArrayParameterTest extends TestCase
     /**
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::arrayList()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::parameterToArray()
-     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\Parameter::exportForRequest()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::exportForRequest()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ArrayParameter::parameterToArray()
      *
      * @expectedException \Chaplean\Bundle\ApiClientBundle\Exception\ParameterConstraintValidationFailedException
      * @return void
      */
-    public function testToArrayInvalidDataThrowsException()
+    public function testExportForRequestInvalidDataThrowsException()
     {
         $parameter = Parameter::arrayList(
             Parameter::object([

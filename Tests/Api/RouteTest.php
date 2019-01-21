@@ -94,6 +94,7 @@ class RouteTest extends TestCase
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::bindUrlParameters()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::__construct()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::fillInUrlPlaceholders()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::buildParameter()
      *
      * @return void
      */
@@ -119,6 +120,7 @@ class RouteTest extends TestCase
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::bindUrlParameters()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::__construct()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::fillInUrlPlaceholders()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::buildParameter()
      *
      * @return void
      */
@@ -143,6 +145,7 @@ class RouteTest extends TestCase
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::urlParameters()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::__construct()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::fillInUrlPlaceholders()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::buildParameter()
      *
      * @return void
      */
@@ -164,6 +167,7 @@ class RouteTest extends TestCase
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::bindQueryParameters()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::buildRequestOptions()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::__construct()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::buildParameter()
      *
      * @return void
      */
@@ -204,6 +208,7 @@ class RouteTest extends TestCase
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::headers()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::queryParameters()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::__construct()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::buildParameter()
      *
      * @return void
      */
@@ -225,6 +230,7 @@ class RouteTest extends TestCase
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::sendRequest()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::__construct()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::getViolations()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::buildParameter()
      *
      * @return void
      */
@@ -434,6 +440,7 @@ class RouteTest extends TestCase
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::requestParameters()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::bindRequestParameters()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::__construct()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::buildParameter()
      *
      * @return void
      */
@@ -480,6 +487,7 @@ class RouteTest extends TestCase
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::bindRequestParameters()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::sendJson()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::__construct()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::buildParameter()
      *
      * @return void
      */
@@ -516,6 +524,7 @@ class RouteTest extends TestCase
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::bindRequestParameters()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::sendXml()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::__construct()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::buildParameter()
      *
      * @return void
      */
@@ -548,6 +557,7 @@ class RouteTest extends TestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::sendJSONString()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::buildRequestParameters()
      *
      * @return void
@@ -581,6 +591,7 @@ class RouteTest extends TestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::sendFormUrlEncoded()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::buildRequestParameters()
      *
      * @return void

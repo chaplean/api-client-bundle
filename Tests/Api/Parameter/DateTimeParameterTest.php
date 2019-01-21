@@ -72,12 +72,11 @@ class DateTimeParameterTest extends TestCase
     /**
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::dateTime()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::parameterToArray()
-     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\Parameter::exportForRequest()
-     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ArrayParameter::parameterToArray()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::exportForRequest()
      *
      * @return void
      */
-    public function testToArray()
+    public function testExportForRequest()
     {
         $parameter = Parameter::dateTime();
 
@@ -92,15 +91,14 @@ class DateTimeParameterTest extends TestCase
     }
 
     /**
-     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::arrayList()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::dateTime()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::parameterToArray()
-     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\Parameter::exportForRequest()
-     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ArrayParameter::parameterToArray()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::exportForRequest()
      *
      * @expectedException \Chaplean\Bundle\ApiClientBundle\Exception\ParameterConstraintValidationFailedException
      * @return void
      */
-    public function testToArrayInvalidDataThrowsException()
+    public function testExportForRequestInvalidDataThrowsException()
     {
         $parameter = Parameter::dateTime();
 
