@@ -9,6 +9,7 @@ use Chaplean\Bundle\ApiClientBundle\Api\ParameterConstraintViolation\InvalidType
 use Chaplean\Bundle\ApiClientBundle\Api\ParameterConstraintViolation\MissingParameterViolation;
 use Chaplean\Bundle\ApiClientBundle\Api\Parameter\ArrayParameter;
 use Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter;
+use Chaplean\Bundle\ApiClientBundle\Exception\ParameterConstraintValidationFailedException;
 use Chaplean\Bundle\ApiClientBundle\Exception\UnexpectedTypeException;
 
 /**
@@ -73,6 +74,22 @@ class Parameter
         $this->violations = new ParameterConstraintViolationCollection();
 
         $this->value = $value;
+    }
+
+    /**
+     * Validates and converts this parameter to the representation used to make the actual request.
+     *
+     * @return array
+     */
+    public function exportForRequest()
+    {
+        $violations = $this->validate();
+
+        if (!$violations->isEmpty()) {
+            throw new ParameterConstraintValidationFailedException();
+        }
+
+        return $this->parameterToArray();
     }
 
     /**

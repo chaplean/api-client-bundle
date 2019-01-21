@@ -241,7 +241,7 @@ class ObjectParameterTest extends TestCase
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::object()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::__construct()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::setValue()
-     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::toArray()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\Parameter::exportForRequest()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::parameterToArray()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::parameterToArray()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ArrayParameter::parameterToArray()
@@ -280,14 +280,14 @@ class ObjectParameterTest extends TestCase
 
         $this->assertEquals(
             $value,
-            $parameter->toArray()
+            $parameter->exportForRequest()
         );
     }
 
     /**
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::object()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::__construct()
-     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::toArray()()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\Parameter::exportForRequest()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::parameterToArray()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::parameterToArray()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ArrayParameter::parameterToArray()
@@ -308,7 +308,7 @@ class ObjectParameterTest extends TestCase
             )
         ]);
 
-        $parameter->toArray();
+        $parameter->exportForRequest();
     }
 
     /**
@@ -509,13 +509,13 @@ class ObjectParameterTest extends TestCase
     }
 
     /**
-     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::toArray()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\Parameter::exportForRequest()
      *
      * @return void
      */
     public function testToArrayOnEmptyValueWithOptionalObject()
     {
         $parameter = Parameter::object(['test' => Parameter::int()->optional()]);
-        $this->assertEquals([], $parameter->toArray());
+        $this->assertEquals([], $parameter->exportForRequest());
     }
 }

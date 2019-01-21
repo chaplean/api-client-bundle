@@ -613,4 +613,148 @@ class RouteTest extends TestCase
         $route->exec();
     }
 
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::buildParameter()
+     *
+     * @return void
+     */
+    public function testBuildRequestParametersWithArrayListParameters()
+    {
+        $this->eventDispatcher->shouldReceive('dispatch')
+            ->once();
+
+        $this->client->shouldReceive('request')
+            ->once()
+            ->with(
+                'POST',
+                'url',
+                [
+                    'headers' => [],
+                    'query'   => [],
+                    'json'     => [
+                        ['id' => 42]
+                    ],
+                ]
+            )
+            ->andReturn(new Response());
+
+        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route->requestParameters(Parameter::arrayList(Parameter::object(['id' => Parameter::id()])));
+        $route->sendJson();
+        $route->bindRequestParameters([['id' => 42]]);
+
+        $route->exec();
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::headers()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::urlParameters()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::queryParameters()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::requestParameters()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::buildParameter()
+     *
+     * @doesNotPerformAssertions
+     *
+     * @return void
+     */
+    public function testAnyParameterAreAllowedInDefiningRoutes()
+    {
+        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+
+        $route->headers(Parameter::bool());
+        $route->headers(Parameter::int());
+        $route->headers(Parameter::string());
+        $route->headers(Parameter::dateTime());
+        $route->headers(Parameter::id());
+        $route->headers(Parameter::untyped());
+        $route->headers(Parameter::float());
+        $route->headers(Parameter::object([]));
+        $route->headers(Parameter::arrayList(Parameter::id()));
+
+        $route->urlParameters(Parameter::bool());
+        $route->urlParameters(Parameter::int());
+        $route->urlParameters(Parameter::string());
+        $route->urlParameters(Parameter::dateTime());
+        $route->urlParameters(Parameter::id());
+        $route->urlParameters(Parameter::untyped());
+        $route->urlParameters(Parameter::float());
+        $route->urlParameters(Parameter::object([]));
+        $route->urlParameters(Parameter::arrayList(Parameter::id()));
+
+        $route->queryParameters(Parameter::bool());
+        $route->queryParameters(Parameter::int());
+        $route->queryParameters(Parameter::string());
+        $route->queryParameters(Parameter::dateTime());
+        $route->queryParameters(Parameter::id());
+        $route->queryParameters(Parameter::untyped());
+        $route->queryParameters(Parameter::float());
+        $route->queryParameters(Parameter::object([]));
+        $route->queryParameters(Parameter::arrayList(Parameter::id()));
+
+        $route->requestParameters(Parameter::bool());
+        $route->requestParameters(Parameter::int());
+        $route->requestParameters(Parameter::string());
+        $route->requestParameters(Parameter::dateTime());
+        $route->requestParameters(Parameter::id());
+        $route->requestParameters(Parameter::untyped());
+        $route->requestParameters(Parameter::float());
+        $route->requestParameters(Parameter::object([]));
+        $route->requestParameters(Parameter::arrayList(Parameter::id()));
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::headers()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::buildParameter()
+     *
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage You must either provide an array or an instance of Parameter.
+     * @return void
+     */
+    public function testInvalidArgumentsToHeaders()
+    {
+        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route->headers(42);
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::urlParameters()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::buildParameter()
+     *
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage You must either provide an array or an instance of Parameter.
+     * @return void
+     */
+    public function testInvalidArgumentsToUrlParameters()
+    {
+        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route->urlParameters(42);
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::queryParameters()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::buildParameter()
+     *
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage You must either provide an array or an instance of Parameter.
+     * @return void
+     */
+    public function testInvalidArgumentsToQueryParameters()
+    {
+        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route->queryParameters(42);
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::requestParameters()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Route::buildParameter()
+     *
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage You must either provide an array or an instance of Parameter.
+     * @return void
+     */
+    public function testInvalidArgumentsToRequestParameters()
+    {
+        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route->requestParameters(42);
+    }
 }
