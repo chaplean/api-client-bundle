@@ -291,4 +291,61 @@ class ArrayParameterTest extends TestCase
 
         $this->assertFalse($parameter->isValid());
     }
+
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::arrayList()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::parameterToArray()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\Parameter::exportForRequest()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ArrayParameter::parameterToArray()
+     *
+     * @return void
+     */
+    public function testToArray()
+    {
+        $parameter = Parameter::arrayList(
+            Parameter::object([
+                'value4' => Parameter::int(),
+                'value5' => Parameter::bool(),
+            ])
+        );
+
+        $value = [
+            [
+                'value4' => 42,
+                'value5' => true,
+            ],
+            [
+                'value4' => 42,
+                'value5' => true,
+            ],
+        ];
+
+        $parameter->setValue($value);
+
+        $this->assertEquals(
+            $value,
+            $parameter->exportForRequest()
+        );
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::arrayList()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::parameterToArray()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\Parameter::exportForRequest()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ArrayParameter::parameterToArray()
+     *
+     * @expectedException \Chaplean\Bundle\ApiClientBundle\Exception\ParameterConstraintValidationFailedException
+     * @return void
+     */
+    public function testToArrayInvalidDataThrowsException()
+    {
+        $parameter = Parameter::arrayList(
+            Parameter::object([
+                'value4' => Parameter::int(),
+                'value5' => Parameter::bool(),
+            ])
+        );
+
+        $parameter->exportForRequest();
+    }
 }
