@@ -240,11 +240,12 @@ public function buildApi()
 List of options for the parameters
 
 ```php 
-    Parameter::xyz()
     // Options available for all types of Parameter
+    Parameter::xyz()
         ->optional()             // Define the parameter optional
         ->defaultValue('value')  // Define a default value for the field
         
+    // Options specific to object Parameter
     Parameter::object()
         ->allowExtraField()      // Allow sending a field not defined in the configuration
 ```
