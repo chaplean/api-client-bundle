@@ -38,6 +38,11 @@ class ObjectParameter extends Parameter
     protected $parameters;
 
     /**
+     * @var boolean
+     */
+    protected $extraFieldsAllowed;
+
+    /**
      * ObjectParameter constructor.
      *
      * @param array $parameters
@@ -49,6 +54,7 @@ class ObjectParameter extends Parameter
         $this->parameters = $parameters;
         $this->requireExactlyParameters = array();
         $this->requireAtLeastParameters = array();
+        $this->extraFieldsAllowed = false;
 
         $this->defaultValue([]);
 
@@ -97,6 +103,16 @@ class ObjectParameter extends Parameter
     }
 
     /**
+     * @return self
+     */
+    public function allowExtraFields(): self
+    {
+        $this->extraFieldsAllowed = true;
+
+        return $this;
+    }
+
+    /**
      * @return ParameterConstraintViolationCollection
      */
     protected function validate()
@@ -107,9 +123,12 @@ class ObjectParameter extends Parameter
             return $violations;
         }
 
-        $extraKeys = array_diff(array_keys($this->value), array_keys($this->parameters));
-        if (!empty($extraKeys)) {
-            $violations->add(new ExtraDataViolation($extraKeys));
+        if (!$this->extraFieldsAllowed) {
+            $extraKeys = array_diff(array_keys($this->value), array_keys($this->parameters));
+
+            if (!empty($extraKeys)) {
+                $violations->add(new ExtraDataViolation($extraKeys));
+            }
         }
 
         foreach ($this->parameters as $key => $parameter) {
@@ -145,7 +164,7 @@ class ObjectParameter extends Parameter
             }
 
             foreach ($values as $key => $value) {
-                $parameter = $this->parameters[$key] ?? null;
+                $parameter = $this->getParameter($key);
 
                 if ($parameter !== null) {
                     $parameter = clone $parameter;
@@ -268,5 +287,22 @@ class ObjectParameter extends Parameter
         );
 
         return $this;
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return Parameter|null
+     */
+    public function getParameter(string $key): ?Parameter
+    {
+        $parameter = $this->parameters[$key] ?? null;
+
+        if ($this->extraFieldsAllowed && $parameter === null) {
+            // All extra fields are converted to default Parameter without any constraints
+            $parameter = new Parameter();
+        }
+
+        return $parameter;
     }
 }

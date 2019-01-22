@@ -221,6 +221,26 @@ class ObjectParameterTest extends TestCase
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::__construct()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::setValue()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::validate()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::allowExtraFields
+     *
+     * @return void
+     */
+    public function testAllowExtraData()
+    {
+        $parameter = Parameter::object([
+            'value' => Parameter::bool(),
+        ])->allowExtraFields();
+
+        $parameter->setValue(['value' => true, 'extra' => false]);
+
+        $this->assertTrue($parameter->isValid());
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::object()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::__construct()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::setValue()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::validate()
      *
      * @return void
      */
@@ -519,5 +539,31 @@ class ObjectParameterTest extends TestCase
     {
         $parameter = Parameter::object(['test' => Parameter::int()->optional()]);
         $this->assertEquals([], $parameter->exportForRequest());
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::getParameter
+     *
+     * @return void
+     */
+    public function testGetParameter(): void
+    {
+        $parameter = Parameter::object(['value' => Parameter::int()]);
+        
+        $this->assertInstanceOf(Parameter::class, $parameter->getParameter('value'));
+        $this->assertNull($parameter->getParameter('extra'));
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::getParameter
+     *
+     * @return void
+     */
+    public function testGetParameterWithAllowedExtraField(): void
+    {
+        $parameter = Parameter::object(['value' => Parameter::int()])->allowExtraFields();
+
+        $this->assertInstanceOf(Parameter::class, $parameter->getParameter('value'));
+        $this->assertInstanceOf(Parameter::class, $parameter->getParameter('extra'));
     }
 }

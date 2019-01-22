@@ -150,6 +150,7 @@ public function buildApi()
      */
     $this->globalParameters()
         ->urlPrefix('http://some.url/')  // set the base url of our api
+        ->urlSuffix('/some-suffix')      // Configure a suffix on our url (Optional, default: empty)
 
     /*
      * We can then set some configurations that will be the default for every route we create later.
@@ -197,7 +198,9 @@ public function buildApi()
         ->headers([])                    // Configure what headers we send
         ->urlParameters([])              // Configure what url placeholders we define
         ->queryParameters([])            // Configure what query strings we send
-        ->requestParameters([]);         // Configure what post data we send
+        ->allowExtraQueryParameters()    // Allow extra field in query parameters
+        ->requestParameters([])          // Configure what post data we send
+        ->allowExtraQueryParameters();   // Allow extra field in request parameters
 
     /*
      * Finally calling headers(), urlParameters(), queryParameters() or requestParameters() without configuring parameters is sort of useless.
@@ -211,7 +214,6 @@ public function buildApi()
         )
     /*
      * We define a list of key => values pairs where key is the name of the parameter and the value is a parameter type.
-     * We can also configure the parameters type. They all support at least optional(), defaultValue().
      */
         ->requestParameters(
             [
@@ -258,6 +260,21 @@ public function buildApi()
             ]
         ));
 }
+```
+
+## Parameter options
+
+List of options for the parameters
+
+```php 
+    // Options available for all types of Parameter
+    Parameter::xyz()
+        ->optional()             // Define the parameter optional
+        ->defaultValue('value')  // Define a default value for the field
+        
+    // Options specific to object Parameter
+    Parameter::object()
+        ->allowExtraField()      // Allow sending a field not defined in the configuration
 ```
 
 ## Using a bundle based on api-client-bundle

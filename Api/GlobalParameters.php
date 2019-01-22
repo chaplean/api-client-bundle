@@ -13,6 +13,7 @@ namespace Chaplean\Bundle\ApiClientBundle\Api;
 class GlobalParameters
 {
     public $urlPrefix;
+    public $urlSuffix;
 
     public $responseType;
     public $requestType;
@@ -27,6 +28,8 @@ class GlobalParameters
      */
     public function __construct()
     {
+        $this->urlSuffix = '';
+
         $this->urlParameters = Parameter::object([]);
         $this->queryParameters = Parameter::object([]);
         $this->headers = Parameter::object([]);
@@ -46,6 +49,20 @@ class GlobalParameters
     public function urlPrefix($urlPrefix)
     {
         $this->urlPrefix = $urlPrefix;
+
+        return $this;
+    }
+
+    /**
+     * Set the url suffix
+     *
+     * @param string $urlSuffix
+     *
+     * @return self
+     */
+    public function urlSuffix(string $urlSuffix): self
+    {
+        $this->urlSuffix = $urlSuffix;
 
         return $this;
     }
