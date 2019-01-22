@@ -221,7 +221,7 @@ class ObjectParameterTest extends TestCase
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::__construct()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::setValue()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::validate()
-     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::allowExtraField
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::allowExtraFields
      *
      * @return void
      */
@@ -229,7 +229,7 @@ class ObjectParameterTest extends TestCase
     {
         $parameter = Parameter::object([
             'value' => Parameter::bool(),
-        ])->allowExtraField();
+        ])->allowExtraFields();
 
         $parameter->setValue(['value' => true, 'extra' => false]);
 
@@ -559,7 +559,7 @@ class ObjectParameterTest extends TestCase
      */
     public function testGetParameterWithAllowedExtraField(): void
     {
-        $parameter = Parameter::object(['value' => Parameter::int()])->allowExtraField();
+        $parameter = Parameter::object(['value' => Parameter::int()])->allowExtraFields();
 
         $this->assertInstanceOf(Parameter::class, $parameter->getParameter('value'));
         $this->assertInstanceOf(Parameter::class, $parameter->getParameter('extra'));

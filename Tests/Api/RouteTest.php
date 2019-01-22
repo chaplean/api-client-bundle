@@ -639,7 +639,7 @@ class RouteTest extends TestCase
      *
      * @return void
      */
-    public function testAllowExtraQueryParameter()
+    public function testAllowExtraQueryParameters()
     {
         $this->eventDispatcher->shouldReceive('dispatch')->once();
 
@@ -674,7 +674,7 @@ class RouteTest extends TestCase
      *
      * @return void
      */
-    public function testAllowExtraRequestParameter()
+    public function testAllowExtraRequestParameters()
     {
         $this->eventDispatcher->shouldReceive('dispatch')->once();
 

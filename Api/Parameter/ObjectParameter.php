@@ -41,7 +41,7 @@ class ObjectParameter extends Parameter
     /**
      * @var boolean
      */
-    protected $allowedExtraField;
+    protected $extraFieldsAllowed;
 
     /**
      * ObjectParameter constructor.
@@ -55,7 +55,7 @@ class ObjectParameter extends Parameter
         $this->parameters = $parameters;
         $this->requireExactlyParameters = array();
         $this->requireAtLeastParameters = array();
-        $this->allowedExtraField = false;
+        $this->extraFieldsAllowed = false;
 
         $this->defaultValue([]);
 
@@ -106,9 +106,9 @@ class ObjectParameter extends Parameter
     /**
      * @return self
      */
-    public function allowExtraField(): self
+    public function allowExtraFields(): self
     {
-        $this->allowedExtraField = true;
+        $this->extraFieldsAllowed = true;
 
         return $this;
     }
@@ -124,7 +124,7 @@ class ObjectParameter extends Parameter
             return $violations;
         }
 
-        if (!$this->allowedExtraField) {
+        if (!$this->extraFieldsAllowed) {
             $extraKeys = array_diff(array_keys($this->value), array_keys($this->parameters));
 
             if (!empty($extraKeys)) {
@@ -315,8 +315,8 @@ class ObjectParameter extends Parameter
     {
         $parameter = $this->parameters[$key] ?? null;
 
-        if ($this->allowedExtraField && $parameter === null) {
-            // all extra fields will be a default Parameter without any constraints
+        if ($this->extraFieldsAllowed && $parameter === null) {
+            // All extra fields are converted to default Parameter without any constraints
             $parameter = new Parameter();
         }
 

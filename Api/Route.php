@@ -97,7 +97,7 @@ class Route
      */
     public function allowExtraQueryParameters(): self
     {
-        $this->queryParameters->allowExtraField();
+        $this->queryParameters->allowExtraFields();
 
         return $this;
     }
@@ -107,7 +107,7 @@ class Route
      */
     public function allowExtraRequestParameters(): self
     {
-        $this->requestParameters->allowExtraField();
+        $this->requestParameters->allowExtraFields();
 
         return $this;
     }
