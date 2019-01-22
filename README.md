@@ -230,6 +230,33 @@ public function buildApi()
                 'enum'     => Parameter::enum(['foo', 'bar']),
             ]
         );
+    /*
+     * Last but not least, you can also directly give any instance of Parameter. Here we use ArrayParameter.
+     */
+        ->requestParameters(Parameter::arrayList(
+            Parameter::object(
+                [
+                    'id'     => Parameter::id()
+                ]
+            )
+        ))
+
+    /*
+     * Passing an array is actually a shortcut that implies ObjectParameter since it's the most common.
+     * 
+     * The following two definitions are equivalent.
+     */
+        ->requestParameters(
+            [
+                'id'     => Parameter::id()
+            ]
+        )
+
+        ->requestParameters(Parameter::object(
+            [
+                'id'     => Parameter::id()
+            ]
+        ));
 }
 ```
 

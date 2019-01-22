@@ -29,7 +29,7 @@ class DateTimeParameterTest extends TestCase
         $date = new \DateTime();
         $parameter->setValue(['date' => $date]);
 
-        $result = $parameter->toArray();
+        $result = $parameter->exportForRequest();
         $this->assertEquals($date->format('Y-m-d'), $result['date']);
     }
 
@@ -48,7 +48,7 @@ class DateTimeParameterTest extends TestCase
         $date = new \DateTime();
         $parameter->setValue(['date' => $date]);
 
-        $result = $parameter->toArray();
+        $result = $parameter->exportForRequest();
         $this->assertEquals($date->format('d-m-Y'), $result['date']);
     }
 
@@ -67,5 +67,41 @@ class DateTimeParameterTest extends TestCase
         $parameter->setValue(42);
 
         $this->assertFalse($parameter->isValid());
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::dateTime()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::parameterToArray()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::exportForRequest()
+     *
+     * @return void
+     */
+    public function testExportForRequest()
+    {
+        $parameter = Parameter::dateTime();
+
+        $value = new \DateTime();
+
+        $parameter->setValue($value);
+
+        $this->assertEquals(
+            $value->format('Y-m-d'),
+            $parameter->exportForRequest()
+        );
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::dateTime()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::parameterToArray()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::exportForRequest()
+     *
+     * @expectedException \Chaplean\Bundle\ApiClientBundle\Exception\ParameterConstraintValidationFailedException
+     * @return void
+     */
+    public function testExportForRequestInvalidDataThrowsException()
+    {
+        $parameter = Parameter::dateTime();
+
+        $parameter->exportForRequest();
     }
 }

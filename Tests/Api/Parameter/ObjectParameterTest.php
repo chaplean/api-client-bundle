@@ -241,14 +241,14 @@ class ObjectParameterTest extends TestCase
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::object()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::__construct()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::setValue()
-     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::toArray()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::exportForRequest()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::parameterToArray()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::parameterToArray()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ArrayParameter::parameterToArray()
      *
      * @return void
      */
-    public function testToArray()
+    public function testExportForRequest()
     {
         $parameter = Parameter::object([
             'value1' => Parameter::int(),
@@ -280,14 +280,14 @@ class ObjectParameterTest extends TestCase
 
         $this->assertEquals(
             $value,
-            $parameter->toArray()
+            $parameter->exportForRequest()
         );
     }
 
     /**
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::object()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::__construct()
-     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::toArray()()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::exportForRequest()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::parameterToArray()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::parameterToArray()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ArrayParameter::parameterToArray()
@@ -295,7 +295,7 @@ class ObjectParameterTest extends TestCase
      * @expectedException \Chaplean\Bundle\ApiClientBundle\Exception\ParameterConstraintValidationFailedException
      * @return void
      */
-    public function testToArrayInvalidDataThrowsException()
+    public function testExportForRequestInvalidDataThrowsException()
     {
         $parameter = Parameter::object([
             'value1' => Parameter::int(),
@@ -308,7 +308,7 @@ class ObjectParameterTest extends TestCase
             )
         ]);
 
-        $parameter->toArray();
+        $parameter->exportForRequest();
     }
 
     /**
@@ -361,6 +361,7 @@ class ObjectParameterTest extends TestCase
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::setValue()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::validate()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::requireAtLeastOneOf()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::isRequireParameters()
      *
      * @return void
      */
@@ -394,6 +395,7 @@ class ObjectParameterTest extends TestCase
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::setValue()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::validate()
      * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::requireExactlyOneOf()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::isRequireParameters()
      *
      * @return void
      */
@@ -509,13 +511,13 @@ class ObjectParameterTest extends TestCase
     }
 
     /**
-     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter\ObjectParameter::toArray()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\Parameter::exportForRequest()
      *
      * @return void
      */
-    public function testToArrayOnEmptyValueWithOptionalObject()
+    public function testExportForRequestOnEmptyValueWithOptionalObject()
     {
         $parameter = Parameter::object(['test' => Parameter::int()->optional()]);
-        $this->assertEquals([], $parameter->toArray());
+        $this->assertEquals([], $parameter->exportForRequest());
     }
 }
