@@ -163,13 +163,13 @@ class Route
     /**
      * Set url parameters for this route.
      *
-     * @param array $parameters
+     * @param Parameter|array $parameters
      *
      * @return $this
      */
-    public function urlParameters(array $parameters)
+    public function urlParameters($parameters)
     {
-        $this->urlParameters = Parameter::object($parameters);
+        $this->urlParameters = $this->buildParameter($parameters);
 
         return $this;
     }
@@ -189,13 +189,13 @@ class Route
     /**
      * Set query string parameters for this route.
      *
-     * @param array $parameters
+     * @param Parameter|array $parameters
      *
      * @return $this
      */
-    public function queryParameters(array $parameters)
+    public function queryParameters($parameters)
     {
-        $this->queryParameters = Parameter::object($parameters);
+        $this->queryParameters = $this->buildParameter($parameters);
 
         return $this;
     }
@@ -215,13 +215,13 @@ class Route
     /**
      * Set headers for this route.
      *
-     * @param array $parameters
+     * @param Parameter|array $parameters
      *
      * @return $this
      */
-    public function headers(array $parameters)
+    public function headers($parameters)
     {
-        $this->headers = Parameter::object($parameters);
+        $this->headers = $this->buildParameter($parameters);
 
         return $this;
     }
@@ -316,6 +316,22 @@ class Route
     }
 
     /**
+     * @param Parameter|array $parameter
+     *
+     * @return Parameter
+     */
+    protected function buildParameter($parameter): Parameter
+    {
+        if ($parameter instanceof Parameter) {
+            return $parameter;
+        } else if (is_array($parameter)) {
+            return Parameter::object($parameter);
+        } else {
+            throw new \InvalidArgumentException('You must either provide an array or an instance of Parameter.');
+        }
+    }
+
+    /**
      * @return ResponseInterface
      */
     private function sendRequest()
@@ -357,7 +373,7 @@ class Route
             return $element !== '';
         });
 
-        $parameters = $this->urlParameters->toArray();
+        $parameters = $this->urlParameters->exportForRequest();
 
         foreach ($parts as $id => $part) {
             $partsBis = explode('.', $part);
@@ -376,13 +392,13 @@ class Route
     /**
      * Set request parameters for this route.
      *
-     * @param array $parameters
+     * @param Parameter|array $parameters
      *
      * @return $this
      */
-    public function requestParameters(array $parameters)
+    public function requestParameters($parameters)
     {
-        $this->requestParameters = Parameter::Object($parameters);
+        $this->requestParameters = $this->buildParameter($parameters);
 
         return $this;
     }
@@ -405,7 +421,7 @@ class Route
     protected function buildRequestParameters()
     {
         $requestType = $this->requestType;
-        $requestData = $this->requestParameters->toArray();
+        $requestData = $this->requestParameters->exportForRequest();
 
         if ($this->requestType === self::REQUEST_JSON_STRING) {
             $requestType = self::REQUEST_FORM_URL_ENCODED;
@@ -422,8 +438,8 @@ class Route
     protected function buildRequestOptions()
     {
         return array_merge([
-            'headers' => $this->headers->toArray(),
-            'query'   => $this->queryParameters->toArray(),
+            'headers' => $this->headers->exportForRequest(),
+            'query'   => $this->queryParameters->exportForRequest(),
         ],
             $this->buildRequestParameters());
     }

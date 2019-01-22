@@ -10,7 +10,6 @@ use Chaplean\Bundle\ApiClientBundle\Api\ParameterConstraintViolation\MissingPara
 use Chaplean\Bundle\ApiClientBundle\Api\ParameterConstraintViolation\NotObjectViolation;
 use Chaplean\Bundle\ApiClientBundle\Api\ParameterConstraintViolation\RequireAtLeastOneOfViolation;
 use Chaplean\Bundle\ApiClientBundle\Api\ParameterConstraintViolation\RequireExactlyOneOfViolation;
-use Chaplean\Bundle\ApiClientBundle\Exception\ParameterConstraintValidationFailedException;
 use Chaplean\Bundle\ApiClientBundle\Exception\RequiredParametersOneOfException;
 
 /**
@@ -178,22 +177,6 @@ class ObjectParameter extends Parameter
         } else {
             $this->value = null;
         }
-    }
-
-    /**
-     * Converts this parameter to an array
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        $violations = $this->validate();
-
-        if (!$violations->isEmpty()) {
-            throw new ParameterConstraintValidationFailedException();
-        }
-
-        return $this->parameterToArray();
     }
 
     /**
