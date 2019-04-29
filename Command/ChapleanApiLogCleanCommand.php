@@ -44,7 +44,8 @@ class ChapleanApiLogCleanCommand extends Command
         $this->addArgument(
             'minimumDate',
             InputArgument::OPTIONAL,
-            'The logs dated before this date will be removed.'
+            'The logs after the mentionned date will be kept. (Format: php\'s DateTime string)',
+            'now -1 month midnight'
         );
     }
 
@@ -60,7 +61,7 @@ class ChapleanApiLogCleanCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $strDate = $input->getArgument('minimumDate') ?: 'now - 1 month midnight';
+        $strDate = $input->getArgument('minimumDate');
         $dateLimit = new \DateTime($strDate);
 
         $apiLogsDeleted = $this->apiLogUtility->deleteMostRecentThan($dateLimit);

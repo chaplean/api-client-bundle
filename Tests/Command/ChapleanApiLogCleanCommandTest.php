@@ -46,6 +46,34 @@ class ChapleanApiLogCleanCommandTest extends MockeryTestCase
     }
 
     /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Command\ChapleanApiLogCleanCommand::__construct()
+     *
+     * @return void
+     */
+    public function testConstructor()
+    {
+        $this->assertInstanceOf(ChapleanApiLogCleanCommand::class, $this->command);
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Command\ChapleanApiLogCleanCommand::__construct()
+     *
+     * @return void
+     */
+    public function testConfigure()
+    {
+        $arguments = $this->command->getDefinition()->getArguments();
+        $minimumDateArgument = \array_values($arguments)[0];
+
+        $this->assertSame('chaplean:api-log:clean', $this->command->getName());
+        $this->assertSame('Delete logs older than the mentionned date (1 month by default)', $this->command->getDescription());
+        $this->assertCount(1, $arguments);
+        $this->assertContains('minimumDate', $minimumDateArgument->getName());
+        $this->assertContains('The logs after the mentionned date will be kept', $minimumDateArgument->getDescription());
+        $this->assertContains('now -1 month midnight', $minimumDateArgument->getDefault());
+    }
+
+    /**
      * @covers \Chaplean\Bundle\ApiClientBundle\Command\ChapleanApiLogCleanCommand::configure()
      * @covers \Chaplean\Bundle\ApiClientBundle\Command\ChapleanApiLogCleanCommand::execute()
      *
