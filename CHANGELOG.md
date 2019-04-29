@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.0
+
+New features:
+  * The command has been updated to now accept a date in argument. #5
+
 ## 1.1.0:
 
 New features:
