@@ -7,7 +7,6 @@ use Chaplean\Bundle\ApiClientBundle\Utility\ApiLogUtility;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class ChapleanApiLogCleanCommandTest.

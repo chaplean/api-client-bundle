@@ -61,7 +61,6 @@ class ChapleanApiLogCleanCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $strDate = $input->getArgument('minimumDate') ?: 'now - 1 month midnight';
-        dump($strDate);
         $dateLimit = new \DateTime($strDate);
 
         $apiLogsDeleted = $this->apiLogUtility->deleteMostRecentThan($dateLimit);
