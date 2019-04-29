@@ -365,6 +365,10 @@ chaplean_api_client:
 You can override the default email content by overriding the translation keys or even the email body twig template.
 The translation keys are under `chaplean_api_client.email.request_executed_notification` and the template is `Resources/views/Email/request_executed_notification.txt.twig`.
 
+To clean the logs from the Database, you may use the command `chaplean:api-logs:clean [minimumDate]`. It will remove all log entries past the minimum date. By default, this argument date is `now -1 month`. It should be formatted as a [PHP's DateTime string](https://www.php.net/manual/fr/datetime.formats.php).
+
+This command makes irreversible changes in your database, so we strongly recommand you to backing up the logs before executing it.
+
 ## Versioning
 
 api-client-bundle follows [semantic versioning](https://semver.org/). In short the scheme is MAJOR.MINOR.PATCH where
