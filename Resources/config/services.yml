@@ -22,3 +22,6 @@ services:
             $mailer: '@?mailer'
             $translator: '@?translator'
             $templating: '@?templating.engine.twig'
+
+    Chaplean\Bundle\ApiClientBundle\Command\ChapleanApiLogCleanCommand:
+        autoconfigure: true
