@@ -15,6 +15,7 @@ Library to help defining client for rest apis.
     * [Defining an Api](#defining-an-api)
 * [Using a bundle based on api-client-bundle](#using-a-bundle-based-on-api-client-bundle)
 * [Additional Features](#additional-features)
+* [Commands](#commands)
 * [Versioning](#Versioning)
 * [Contributing](#Contributing)
 * [Hacking](#Hacking)
@@ -365,7 +366,9 @@ chaplean_api_client:
 You can override the default email content by overriding the translation keys or even the email body twig template.
 The translation keys are under `chaplean_api_client.email.request_executed_notification` and the template is `Resources/views/Email/request_executed_notification.txt.twig`.
 
-To clean the logs from the Database, you may use the command `chaplean:api-logs:clean [minimumDate]`. It will remove all log entries past the minimum date. By default, this argument date is `now -1 month`. It should be formatted as a [PHP's DateTime string](https://www.php.net/manual/fr/datetime.formats.php).
+## Commands
+
+To clean the logs from the Database, you may use the command `chaplean:api-logs:clean [minimumDate]`. It will remove old logs, only keeping those more recent than the given `minimumDate` date. By default, this argument date is `now -1 month`. It should be formatted as a [PHP's DateTime string](https://www.php.net/manual/fr/datetime.formats.php).
 
 This command makes irreversible changes in your database, so we strongly recommend you to back up the logs before executing it.
 
