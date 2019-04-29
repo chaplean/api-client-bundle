@@ -1,6 +1,7 @@
 services:
     _defaults:
         autowire: true
+        autoconfigure: true
         public: true
 
     Chaplean\Bundle\ApiClientBundle\EventListener\RequestExecutedListener:
@@ -22,3 +23,5 @@ services:
             $mailer: '@?mailer'
             $translator: '@?translator'
             $templating: '@?templating.engine.twig'
+
+    Chaplean\Bundle\ApiClientBundle\Command\ChapleanApiLogCleanCommand: ~
