@@ -17,6 +17,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ChapleanApiLogCleanCommand extends Command
 {
+    /** @var string */
+    protected static $defaultName = 'chaplean:api-log:clean';
+
     /** @var ApiLogUtility */
     protected $apiLogUtility;
 
@@ -39,12 +42,11 @@ class ChapleanApiLogCleanCommand extends Command
      */
     protected function configure()
     {
-        $this->setName('chaplean:api-log:clean');
         $this->setDescription('Delete logs older than the mentionned date (1 month by default)');
         $this->addArgument(
             'minimumDate',
             InputArgument::OPTIONAL,
-            'The logs after the mentionned date will be kept. (Format: php\'s DateTime string)',
+            'The logs after the mentionned date will be kept. (Format: PHP\'s DateTime string)',
             'now -1 month midnight'
         );
     }
@@ -55,14 +57,24 @@ class ChapleanApiLogCleanCommand extends Command
      * @param InputInterface  $input
      * @param OutputInterface $output
      *
-     * @return void
+     * @return integer
      *
      * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $strDate = $input->getArgument('minimumDate');
-        $dateLimit = new \DateTime($strDate);
+        $dateLimit = null;
+
+        try {
+            $dateLimit = new \DateTime($strDate);
+        } catch (\Exception $e) {
+            $output->writeln(
+                sprintf('The date "%s" is an unvalid string for the PHP\'s DateTime constructor.', $strDate)
+            );
+
+            return 1;
+        }
 
         $apiLogsDeleted = $this->apiLogUtility->deleteMostRecentThan($dateLimit);
 

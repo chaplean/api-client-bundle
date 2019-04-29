@@ -25,7 +25,7 @@ class ChapleanApiLogCleanCommandTest extends MockeryTestCase
     /**
      * @var ChapleanApiLogCleanCommand
      */
-    private $command;
+    private $chapleanApiLogCleanCommand;
 
     /**
      * @var CommandTester
@@ -41,8 +41,8 @@ class ChapleanApiLogCleanCommandTest extends MockeryTestCase
 
         $this->apiLogUtility = \Mockery::mock(ApiLogUtility::class);
 
-        $this->command = new ChapleanApiLogCleanCommand($this->apiLogUtility);
-        $this->commandTester = new CommandTester($this->command);
+        $this->chapleanApiLogCleanCommand = new ChapleanApiLogCleanCommand($this->apiLogUtility);
+        $this->commandTester = new CommandTester($this->chapleanApiLogCleanCommand);
     }
 
     /**
@@ -52,21 +52,21 @@ class ChapleanApiLogCleanCommandTest extends MockeryTestCase
      */
     public function testConstructor()
     {
-        $this->assertInstanceOf(ChapleanApiLogCleanCommand::class, $this->command);
+        $this->assertInstanceOf(ChapleanApiLogCleanCommand::class, $this->chapleanApiLogCleanCommand);
     }
 
     /**
-     * @covers \Chaplean\Bundle\ApiClientBundle\Command\ChapleanApiLogCleanCommand::__construct()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Command\ChapleanApiLogCleanCommand::configure()
      *
      * @return void
      */
     public function testConfigure()
     {
-        $arguments = $this->command->getDefinition()->getArguments();
+        $arguments = $this->chapleanApiLogCleanCommand->getDefinition()->getArguments();
         $minimumDateArgument = \array_values($arguments)[0];
 
-        $this->assertSame('chaplean:api-log:clean', $this->command->getName());
-        $this->assertSame('Delete logs older than the mentionned date (1 month by default)', $this->command->getDescription());
+        $this->assertSame('chaplean:api-log:clean', $this->chapleanApiLogCleanCommand->getName());
+        $this->assertSame('Delete logs older than the mentionned date (1 month by default)', $this->chapleanApiLogCleanCommand->getDescription());
         $this->assertCount(1, $arguments);
         $this->assertContains('minimumDate', $minimumDateArgument->getName());
         $this->assertContains('The logs after the mentionned date will be kept', $minimumDateArgument->getDescription());
@@ -74,7 +74,6 @@ class ChapleanApiLogCleanCommandTest extends MockeryTestCase
     }
 
     /**
-     * @covers \Chaplean\Bundle\ApiClientBundle\Command\ChapleanApiLogCleanCommand::configure()
      * @covers \Chaplean\Bundle\ApiClientBundle\Command\ChapleanApiLogCleanCommand::execute()
      *
      * @return void
@@ -83,7 +82,10 @@ class ChapleanApiLogCleanCommandTest extends MockeryTestCase
      */
     public function testExecuteWithDefaultDate()
     {
-        $this->apiLogUtility->shouldReceive('deleteMostRecentThan')->once()->andReturn(1);
+        $this->apiLogUtility
+            ->shouldReceive('deleteMostRecentThan')
+            ->once()
+            ->andReturn(1);
 
         $this->commandTester->execute([]);
 
@@ -93,7 +95,24 @@ class ChapleanApiLogCleanCommandTest extends MockeryTestCase
     }
 
     /**
-     * @covers \Chaplean\Bundle\ApiClientBundle\Command\ChapleanApiLogCleanCommand::configure()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Command\ChapleanApiLogCleanCommand::execute()
+     *
+     * @return void
+     *
+     * @throws \Exception
+     */
+    public function testExecuteWithUnvalidDate()
+    {
+        $this->apiLogUtility->shouldNotReceive('deleteMostRecentThan');
+
+        $this->commandTester->execute(['minimumDate' => 'test']);
+
+        $output = $this->commandTester->getDisplay();
+
+        $this->assertContains('The date "test" is an unvalid string for the PHP\'s DateTime constructor', $output);
+    }
+
+    /**
      * @covers \Chaplean\Bundle\ApiClientBundle\Command\ChapleanApiLogCleanCommand::execute()
      *
      * @return void
@@ -102,7 +121,10 @@ class ChapleanApiLogCleanCommandTest extends MockeryTestCase
      */
     public function testExecuteWithDate()
     {
-        $this->apiLogUtility->shouldReceive('deleteMostRecentThan')->once()->andReturn(1);
+        $this->apiLogUtility
+            ->shouldReceive('deleteMostRecentThan')
+            ->once()
+            ->andReturn(1);
 
         $this->commandTester->execute(['minimumDate' => '-1 day']);
 
