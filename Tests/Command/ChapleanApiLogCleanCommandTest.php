@@ -62,7 +62,9 @@ class ChapleanApiLogCleanCommandTest extends MockeryTestCase
      */
     public function testConfigure()
     {
-        $arguments = $this->chapleanApiLogCleanCommand->getDefinition()->getArguments();
+        $arguments = $this->chapleanApiLogCleanCommand
+            ->getDefinition()
+            ->getArguments();
         $minimumDateArgument = \array_values($arguments)[0];
 
         $this->assertSame('chaplean:api-log:clean', $this->chapleanApiLogCleanCommand->getName());

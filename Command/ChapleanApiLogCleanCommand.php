@@ -64,7 +64,6 @@ class ChapleanApiLogCleanCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $strDate = $input->getArgument('minimumDate');
-        $dateLimit = null;
 
         try {
             $dateLimit = new \DateTime($strDate);
