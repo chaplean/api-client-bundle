@@ -85,4 +85,16 @@ class AbstractApiTest extends TestCase
         $this->assertInstanceOf(Route::class, $api->patchPatch());
         $this->assertInstanceOf(Route::class, $api->deleteDelete());
     }
+
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Api\AbstractApi::getName
+     *
+     * @return void
+     */
+    public function testGetName()
+    {
+        $api = new TestApi(new Client(), $this->eventDispatcher);
+
+        $this->assertSame('test_api', $api->getName());
+    }
 }

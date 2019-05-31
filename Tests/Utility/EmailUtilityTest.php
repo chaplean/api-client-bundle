@@ -51,7 +51,7 @@ class EmailUtilityTest extends MockeryTestCase
         $this->templating = \Mockery::mock(TwigEngine::class);
 
         $config = [
-            'enable_email_logging' => true,
+            'enable_email_logging' => null,
             'email_logging'        => [
                 'codes_listened' => $config,
                 'address_from'   => 'test@example.com',
@@ -78,7 +78,7 @@ class EmailUtilityTest extends MockeryTestCase
         $this->mailer->shouldReceive('send')->once();
 
         $config = [
-            'enable_email_logging' => true,
+            'enable_email_logging' => null,
             'email_logging'        => [
                 'codes_listened' => ['0', '4XX', '5XX'],
                 'address_from'   => 'test@example.com',
@@ -101,7 +101,7 @@ class EmailUtilityTest extends MockeryTestCase
         $this->mailer->shouldNotReceive('send');
 
         $config = [
-            'enable_email_logging' => true,
+            'enable_email_logging' => null,
             'email_logging'        => [
                 'codes_listened' => ['0', '4XX', '5XX'],
                 'address_from'   => 'test@example.com',
@@ -115,29 +115,6 @@ class EmailUtilityTest extends MockeryTestCase
 
     /**
      * @covers \Chaplean\Bundle\ApiClientBundle\Utility\EmailUtility::__construct()
-     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\EmailUtility::sendRequestExecutedNotificationEmail()
-     *
-     * @return void
-     */
-    public function testDontSendMailIfDisabled()
-    {
-        $this->mailer->shouldNotReceive('send');
-
-        $config = [
-            'enable_email_logging' => false,
-            'email_logging'        => [
-                'codes_listened' => ['0', '4XX', '5XX'],
-                'address_from'   => 'test@example.com',
-                'address_to'     => 'test@example.com'
-            ],
-        ];
-
-        $utility = new EmailUtility($config, $this->mailer, $this->translator, $this->templating);
-        $utility->sendRequestExecutedNotificationEmail(new PlainResponse(new Response(501, [], ''), 'get', 'url', []));
-    }
-
-    /**
-     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\EmailUtility::__construct()
      *
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Email logging is enabled, you must register the mailer, translator and twig services
@@ -147,7 +124,7 @@ class EmailUtilityTest extends MockeryTestCase
     public function testConstructFailsIfConfigEnablesLoggingWithoutTheRequiredServices()
     {
         $config = [
-            'enable_email_logging' => true,
+            'enable_email_logging' => null,
             'email_logging'        => [
                 'codes_listened' => ['0', '4XX', '5XX'],
                 'address_from'   => 'test@example.com',
@@ -156,28 +133,5 @@ class EmailUtilityTest extends MockeryTestCase
         ];
 
         new EmailUtility($config);
-    }
-
-    /**
-     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\EmailUtility::__construct()
-     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\EmailUtility::sendRequestExecutedNotificationEmail()
-     *
-     * @return void
-     */
-    public function testMissingServicesAreIgnoredIfLoggingIsDisabled()
-    {
-        $this->mailer->shouldNotReceive('send');
-
-        $config = [
-            'enable_email_logging' => false,
-            'email_logging'        => [
-                'codes_listened' => ['0', '4XX', '5XX'],
-                'address_from'   => 'test@example.com',
-                'address_to'     => 'test@example.com'
-            ],
-        ];
-
-        $utility = new EmailUtility($config);
-        $utility->sendRequestExecutedNotificationEmail(new PlainResponse(new Response(501, [], ''), 'get', 'url', []));
     }
 }

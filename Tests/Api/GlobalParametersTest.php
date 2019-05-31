@@ -12,6 +12,7 @@ use Chaplean\Bundle\ApiClientBundle\Api\Response\Success\XmlResponse;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7\Response;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -28,12 +29,12 @@ class GlobalParametersTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var ClientInterface
+     * @var ClientInterface|MockInterface
      */
     protected $client;
 
     /**
-     * @var EventDispatcherInterface
+     * @var EventDispatcherInterface|MockInterface
      */
     protected $eventDispatcher;
 
@@ -58,7 +59,7 @@ class GlobalParametersTest extends TestCase
     public function testGlobalParametersConstruct()
     {
         $globalParameter = new GlobalParameters();
-        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
+        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter, 'foo_api');
 
         $this->client->shouldReceive('request')
             ->once()
@@ -80,7 +81,7 @@ class GlobalParametersTest extends TestCase
     {
         $globalParameter = new GlobalParameters();
         $globalParameter->expectsBinary();
-        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
+        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter, 'foo_api');
 
         $this->client->shouldReceive('request')
             ->once()
@@ -102,7 +103,7 @@ class GlobalParametersTest extends TestCase
     {
         $globalParameter = new GlobalParameters();
         $globalParameter->expectsJson();
-        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
+        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter, 'foo_api');
 
         $this->client->shouldReceive('request')
             ->once()
@@ -124,7 +125,7 @@ class GlobalParametersTest extends TestCase
     {
         $globalParameter = new GlobalParameters();
         $globalParameter->expectsXml();
-        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
+        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter, 'foo_api');
 
         $this->client->shouldReceive('request')
             ->once()
@@ -147,7 +148,7 @@ class GlobalParametersTest extends TestCase
         $globalParameter = new GlobalParameters();
         $globalParameter->sendJson();
 
-        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
+        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter, 'foo_api');
 
         $this->client->shouldReceive('request')
             ->once()
@@ -170,7 +171,7 @@ class GlobalParametersTest extends TestCase
         $globalParameter = new GlobalParameters();
         $globalParameter->sendXml();
 
-        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
+        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter, 'foo_api');
 
         $this->client->shouldReceive('request')
             ->once()
@@ -193,7 +194,7 @@ class GlobalParametersTest extends TestCase
         $globalParameter = new GlobalParameters();
         $globalParameter->sendJSONString();
 
-        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
+        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter, 'foo_api');
 
         $this->client->shouldReceive('request')
             ->once()
@@ -216,7 +217,7 @@ class GlobalParametersTest extends TestCase
         $globalParameter = new GlobalParameters();
         $globalParameter->urlPrefix('prefix');
 
-        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
+        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter, 'foo_api');
 
         $this->client->shouldReceive('request')
             ->once()
@@ -239,7 +240,7 @@ class GlobalParametersTest extends TestCase
         $globalParameter = new GlobalParameters();
         $globalParameter->urlSuffix('suffix');
 
-        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
+        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter, 'foo_api');
 
         $this->client->shouldReceive('request')
             ->once()
@@ -262,7 +263,7 @@ class GlobalParametersTest extends TestCase
         $globalParameter = new GlobalParameters();
         $globalParameter->urlParameters(['id' => Parameter::id()]);
 
-        $route = new Route('POST', 'url/{id}', $this->client, $this->eventDispatcher, $globalParameter);
+        $route = new Route('POST', 'url/{id}', $this->client, $this->eventDispatcher, $globalParameter, 'foo_api');
         $route->bindUrlParameters(['id' => 42]);
 
         $this->client->shouldReceive('request')
@@ -286,7 +287,7 @@ class GlobalParametersTest extends TestCase
         $globalParameter = new GlobalParameters();
         $globalParameter->queryParameters(['id' => Parameter::id()]);
 
-        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
+        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter, 'foo_api');
         $route->bindQueryParameters(['id' => 42]);
 
         $this->client->shouldReceive('request')
@@ -310,7 +311,7 @@ class GlobalParametersTest extends TestCase
         $globalParameter = new GlobalParameters();
         $globalParameter->headers(['id' => Parameter::id()]);
 
-        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
+        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter, 'foo_api');
         $route->bindHeaders(['id' => 42]);
 
         $this->client->shouldReceive('request')
@@ -334,7 +335,7 @@ class GlobalParametersTest extends TestCase
         $globalParameter = new GlobalParameters();
         $globalParameter->requestParameters(['id' => Parameter::id()]);
 
-        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter);
+        $route = new Route('POST', 'url', $this->client, $this->eventDispatcher, $globalParameter, 'foo_api');
         $route->bindRequestParameters(['id' => 42]);
 
         $this->client->shouldReceive('request')

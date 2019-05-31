@@ -48,7 +48,7 @@ class EmailUtility
     {
         $this->parameters = $parameters;
 
-        if ($this->parameters['enable_email_logging'] && ($mailer === null || $translator === null || $templating === null)) {
+        if (array_key_exists('enable_email_logging', $this->parameters) && ($mailer === null || $translator === null || $templating === null)) {
             throw new \InvalidArgumentException('Email logging is enabled, you must register the mailer, translator and twig services');
         }
 
@@ -66,10 +66,6 @@ class EmailUtility
      */
     public function sendRequestExecutedNotificationEmail(ResponseInterface $response)
     {
-        if (!$this->parameters['enable_email_logging']) {
-            return;
-        }
-
         $code = $response->getCode();
         if (!$this->isStatusCodeConfiguredForNotifications($code)) {
             return;

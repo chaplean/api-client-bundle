@@ -51,11 +51,10 @@ class ApiLogUtility
      */
     public function __construct(array $parameters, ApiLogQuery $apiLogQuery, Registry $registry = null)
     {
-        $this->parameters = $parameters;
         $this->apiLogQuery = $apiLogQuery;
 
         if ($registry === null) {
-            if ($this->parameters['enable_database_logging']) {
+            if (array_key_exists('enable_database_logging', $parameters)) {
                 throw new \InvalidArgumentException('Database logging is enabled, you must register the doctrine service');
             }
         } else {
@@ -74,10 +73,6 @@ class ApiLogUtility
      */
     public function logResponse(ResponseInterface $response)
     {
-        if (!$this->parameters['enable_database_logging']) {
-            return;
-        }
-
         $methodName = $response->getMethod();
         $codeNumber = $response->getCode();
 

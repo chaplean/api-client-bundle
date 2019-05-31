@@ -3,8 +3,8 @@
 namespace Chaplean\Bundle\ApiClientBundle\EventListener;
 
 use Chaplean\Bundle\ApiClientBundle\Event\RequestExecutedEvent;
-use Chaplean\Bundle\ApiClientBundle\Utility\EmailUtility;
 use Chaplean\Bundle\ApiClientBundle\Utility\ApiLogUtility;
+use Chaplean\Bundle\ApiClientBundle\Utility\EmailUtility;
 
 /**
  * Class RequestExecutedListenerTest.
@@ -16,6 +16,11 @@ use Chaplean\Bundle\ApiClientBundle\Utility\ApiLogUtility;
  */
 class RequestExecutedListener
 {
+    /**
+     * @var array
+     */
+    private $parameters;
+
     /**
      * @var ApiLogUtility
      */
@@ -29,11 +34,13 @@ class RequestExecutedListener
     /**
      * RequestExecutedListener constructor.
      *
+     * @param array         $parameters
      * @param ApiLogUtility $apiLogUtility
      * @param EmailUtility  $emailUtility
      */
-    public function __construct(ApiLogUtility $apiLogUtility, EmailUtility $emailUtility)
+    public function __construct(array $parameters, ApiLogUtility $apiLogUtility, EmailUtility $emailUtility)
     {
+        $this->parameters = $parameters;
         $this->apiLogUtility = $apiLogUtility;
         $this->emailUtility = $emailUtility;
     }
@@ -49,7 +56,37 @@ class RequestExecutedListener
     {
         $response = $event->getResponse();
 
-        $this->apiLogUtility->logResponse($response);
-        $this->emailUtility->sendRequestExecutedNotificationEmail($response);
+        if ($this->isEnabledLoggingFor('enable_database_logging', $event->getApiName())) {
+            $this->apiLogUtility->logResponse($response);
+        }
+
+        if ($this->isEnabledLoggingFor('enable_email_logging', $event->getApiName())) {
+            $this->emailUtility->sendRequestExecutedNotificationEmail($response);
+        }
+    }
+
+    /**
+     * @param string $logType
+     * @param string $apiName
+     *
+     * @return boolean
+     */
+    public function isEnabledLoggingFor(string $logType, string $apiName): bool
+    {
+        if (!array_key_exists($logType, $this->parameters)) {
+            return false;
+        }
+
+        if ($this->parameters[$logType] === null) {
+            return true;
+        }
+
+        $isEnabled = in_array($apiName, $this->parameters[$logType]['elements'], true);
+
+        if ($this->parameters[$logType]['type'] === 'exclusive') {
+            return !$isEnabled;
+        }
+
+        return $isEnabled;
     }
 }

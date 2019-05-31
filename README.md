@@ -351,8 +351,8 @@ The default configuraton is:
 config.yml:
 ```yaml
 chaplean_api_client:
-    enable_database_logging: false
-    enable_email_logging: false
+    enable_database_logging: false # You can define a list of names of your API (ex: ['foo_api'], ['!foo_api'])
+    enable_email_logging: false # You can define a list of names of your API (ex: ['foo_api'], ['!foo_api']))
     email_logging:
         # Limit emails to the specified codes.
         # You can either use a code directly like 200, 404, ...

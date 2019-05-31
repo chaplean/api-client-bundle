@@ -30,7 +30,7 @@ class ApiLogUtilityTest extends MockeryTestCase
      *
      * @return void
      */
-    public function testLogRequestInDatabaseIfEnabled()
+    public function testLogRequestInDatabase()
     {
         $methodType = new ApiMethodType();
         $apiMethodRepo = \Mockery::mock(EntityRepository::class);
@@ -99,29 +99,6 @@ class ApiLogUtilityTest extends MockeryTestCase
 
     /**
      * @covers \Chaplean\Bundle\ApiClientBundle\Utility\ApiLogUtility::__construct()
-     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\ApiLogUtility::logResponse()
-     *
-     * @return void
-     */
-    public function testDontLogRequestInDatabaseIfDisabled()
-    {
-        $em = \Mockery::mock(EntityManager::class);
-
-        $apiLogQuery = \Mockery::mock(ApiLogQuery::class);
-        $registry = \Mockery::mock(Registry::class);
-        $registry->shouldReceive('getManager')->once()->andReturn($em);
-
-        $config = [
-            'enable_database_logging' => false,
-        ];
-
-        $utility = new ApiLogUtility($config, $apiLogQuery, $registry);
-
-        $utility->logResponse(new PlainResponse(new Response(200, [], ''), 'get', 'url', []));
-    }
-
-    /**
-     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\ApiLogUtility::__construct()
      *
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Database logging is enabled, you must register the doctrine service
@@ -133,7 +110,7 @@ class ApiLogUtilityTest extends MockeryTestCase
         $apiLogQuery = \Mockery::mock(ApiLogQuery::class);
 
         $config = [
-            'enable_database_logging' => true,
+            'enable_database_logging' => null,
         ];
 
         new ApiLogUtility($config, $apiLogQuery);
@@ -152,7 +129,6 @@ class ApiLogUtilityTest extends MockeryTestCase
         $apiLogQuery = \Mockery::mock(ApiLogQuery::class);
 
         $config = [
-            'enable_database_logging' => false,
         ];
 
         new ApiLogUtility($config, $apiLogQuery);

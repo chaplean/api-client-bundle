@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class Route
 {
+    protected $apiName;
     protected $client;
     protected $eventDispatcher;
 
@@ -64,13 +65,15 @@ class Route
      * @param ClientInterface          $client
      * @param EventDispatcherInterface $eventDispatcher
      * @param GlobalParameters         $globalParameters
+     * @param string                   $apiName
      */
-    public function __construct($method, $url, ClientInterface $client, EventDispatcherInterface $eventDispatcher, GlobalParameters $globalParameters)
+    public function __construct($method, $url, ClientInterface $client, EventDispatcherInterface $eventDispatcher, GlobalParameters $globalParameters, string $apiName)
     {
         if (!in_array($method, self::$allowedMethods, true)) {
             throw new \InvalidArgumentException();
         }
 
+        $this->apiName = $apiName;
         $this->client = $client;
         $this->eventDispatcher = $eventDispatcher;
 
@@ -260,7 +263,7 @@ class Route
     public function exec()
     {
         $response = $this->sendRequest();
-        $this->eventDispatcher->dispatch('chaplean_api_client.request_executed', new RequestExecutedEvent($response));
+        $this->eventDispatcher->dispatch('chaplean_api_client.request_executed', new RequestExecutedEvent($response, $this->apiName));
 
         return $response;
     }
