@@ -281,7 +281,7 @@ class EmailUtilityTest extends MockeryTestCase
      *
      * @return void
      */
-    public function testLogResponseWithDisabledApi()
+    public function testSendRequestExecutedNotificationEmailWithDisabledApi()
     {
         $this->mailer->shouldNotReceive('send');
 
