@@ -99,13 +99,17 @@ class Configuration implements ConfigurationInterface
                         ->ifString()
                         ->then(function ($v) { return ['elements' => [$v]]; })
                     ->end()
-                    ->beforeNormalization() // empty array value
-                        ->ifTrue(function ($v) { return is_array($v) && empty($v); })
-                        ->then(function () { return ['type' => 'inclusive', 'elements' => []]; })
-                    ->end()
                     ->beforeNormalization() // ~ value
                         ->ifNull()
                         ->then(function () { return ['elements' => []]; })
+                    ->end()
+                    ->beforeNormalization() // true value (deprecated value)
+                        ->ifTrue(function ($v) { is_bool($v) && $v; })
+                        ->then(function () { return ['elements' => []]; })
+                    ->end()
+                    ->beforeNormalization() // empty array value
+                        ->ifTrue(function ($v) { return empty($v); })
+                        ->then(function () { return ['type' => 'inclusive', 'elements' => []]; })
                     ->end()
                     ->beforeNormalization() // array value
                         ->ifTrue(function ($v) { return is_array($v) && is_numeric(key($v)); })
@@ -113,6 +117,10 @@ class Configuration implements ConfigurationInterface
                     ->end()
                     ->validate()
                         ->always(function ($v) use ($nodeName) {
+                            if (empty($v['elements']) && !isset($v['type'])) {
+                                return null;
+                            }
+
                             $isExclusive = null;
                             if (isset($v['type'])) {
                                 $isExclusive =  $v['type'] === 'exclusive';
@@ -135,22 +143,19 @@ class Configuration implements ConfigurationInterface
                                 }
                             }
 
-                            if (empty($elements) && !isset($v['type'])) {
-                                return null;
-                            }
-
                             return ['type' => $isExclusive ? 'exclusive' : 'inclusive', 'elements' => $elements];
                         })
                     ->end()
                     ->children()
                         ->scalarNode('type')
-                        ->validate()
-                            ->ifNotInArray(['inclusive', 'exclusive'])
-                            ->thenInvalid('The type of ' . $nodeName . ' has to be inclusive or exclusive')
+                            ->validate()
+                                ->ifNotInArray(['inclusive', 'exclusive'])
+                                ->thenInvalid('The type of ' . $nodeName . ' has to be inclusive or exclusive')
+                            ->end()
                         ->end()
-                    ->end()
-                    ->arrayNode('elements')
-                        ->prototype('scalar')->end()
+                        ->arrayNode('elements')
+                            ->prototype('scalar')->end()
+                        ->end()
                     ->end()
                 ->end()
             ->end();

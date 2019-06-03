@@ -52,9 +52,10 @@ class ApiLogUtility
     public function __construct(array $parameters, ApiLogQuery $apiLogQuery, Registry $registry = null)
     {
         $this->apiLogQuery = $apiLogQuery;
+        $this->parameters = $parameters;
 
         if ($registry === null) {
-            if (array_key_exists('enable_database_logging', $parameters)) {
+            if (array_key_exists('enable_database_logging', $this->parameters)) {
                 throw new \InvalidArgumentException('Database logging is enabled, you must register the doctrine service');
             }
         } else {
@@ -68,11 +69,16 @@ class ApiLogUtility
      * Persists in database a log entity representing the given $response.
      *
      * @param ResponseInterface $response
+     * @param string|null       $apiName
      *
      * @return void
      */
-    public function logResponse(ResponseInterface $response)
+    public function logResponse(ResponseInterface $response, string $apiName = null)
     {
+        if (!$this->isEnabledLoggingFor($apiName ?: '')) {
+            return;
+        }
+
         $methodName = $response->getMethod();
         $codeNumber = $response->getCode();
 
@@ -137,5 +143,33 @@ class ApiLogUtility
     public function getLogByUuid($uuid)
     {
         return $this->logs[$uuid] ?? $this->em->getRepository(ApiLog::class)->findOneByResponseUuid($uuid);
+    }
+
+    /**
+     * Warning: Will be move in v2.X
+     *
+     * Check if database logging for $apiName is enabled
+     *
+     * @param string $apiName
+     *
+     * @return boolean
+     */
+    public function isEnabledLoggingFor(string $apiName): bool
+    {
+        if (!array_key_exists('enable_database_logging', $this->parameters)) {
+            return false;
+        }
+
+        if ($this->parameters['enable_database_logging'] === null) {
+            return true;
+        }
+
+        $isEnabled = in_array($apiName, $this->parameters['enable_database_logging']['elements'], true);
+
+        if ($this->parameters['enable_database_logging']['type'] === 'exclusive') {
+            return !$isEnabled;
+        }
+
+        return $isEnabled;
     }
 }

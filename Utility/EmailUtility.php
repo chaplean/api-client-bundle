@@ -61,11 +61,16 @@ class EmailUtility
      * Persists in database a log entity representing the request just ran.
      *
      * @param ResponseInterface $response
+     * @param string|null       $apiName
      *
      * @return void
      */
-    public function sendRequestExecutedNotificationEmail(ResponseInterface $response)
+    public function sendRequestExecutedNotificationEmail(ResponseInterface $response, string $apiName = null)
     {
+        if (!$this->isEnabledLoggingFor($apiName ?: '')) {
+            return;
+        }
+
         $code = $response->getCode();
         if (!$this->isStatusCodeConfiguredForNotifications($code)) {
             return;
@@ -108,5 +113,33 @@ class EmailUtility
         }
 
         return false;
+    }
+
+    /**
+     * Warning: Will be move in v2.X
+     *
+     * Check if email logging for $apiName is enabled
+     *
+     * @param string $apiName
+     *
+     * @return boolean
+     */
+    public function isEnabledLoggingFor(string $apiName): bool
+    {
+        if (!array_key_exists('enable_email_logging', $this->parameters)) {
+            return false;
+        }
+
+        if ($this->parameters['enable_email_logging'] === null) {
+            return true;
+        }
+
+        $isEnabled = in_array($apiName, $this->parameters['enable_email_logging']['elements'], true);
+
+        if ($this->parameters['enable_email_logging']['type'] === 'exclusive') {
+            return !$isEnabled;
+        }
+
+        return $isEnabled;
     }
 }

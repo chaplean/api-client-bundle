@@ -1,17 +1,17 @@
 <?php
 
-namespace Chaplean\Bundle\ApiClientBundle\Utility;
+namespace Tests\Chaplean\Bundle\ApiClientBundle\Utility;
 
 use Chaplean\Bundle\ApiClientBundle\Api\Response\Success\PlainResponse;
 use Chaplean\Bundle\ApiClientBundle\Entity\ApiLog;
 use Chaplean\Bundle\ApiClientBundle\Entity\ApiMethodType;
 use Chaplean\Bundle\ApiClientBundle\Entity\ApiStatusCodeType;
 use Chaplean\Bundle\ApiClientBundle\Query\ApiLogQuery;
+use Chaplean\Bundle\ApiClientBundle\Utility\ApiLogUtility;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -24,6 +24,28 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class ApiLogUtilityTest extends MockeryTestCase
 {
+    /**
+     * @var ApiLogQuery|\Mockery\MockInterface
+     */
+    private $apiLogQuery;
+
+    /**
+     * @var Registry|\Mockery\MockInterface
+     */
+    private $registry;
+
+    /**
+     * @var EntityManager|\Mockery\MockInterface
+     */
+    private $em;
+
+    protected function setUp()
+    {
+        $this->apiLogQuery = \Mockery::mock(ApiLogQuery::class);
+        $this->em = \Mockery::mock(EntityManager::class);
+        $this->registry = \Mockery::mock(Registry::class);
+    }
+
     /**
      * @covers \Chaplean\Bundle\ApiClientBundle\Utility\ApiLogUtility::__construct()
      * @covers \Chaplean\Bundle\ApiClientBundle\Utility\ApiLogUtility::logResponse()
@@ -53,7 +75,7 @@ class ApiLogUtilityTest extends MockeryTestCase
         $registry->shouldReceive('getManager')->once()->andReturn($em);
 
         $config = [
-            'enable_database_logging' => true,
+            'enable_database_logging' => null // true value will be convert to null on configuration normalization
         ];
 
         $utility = new ApiLogUtility($config, $apiLogQuery, $registry);
@@ -89,7 +111,7 @@ class ApiLogUtilityTest extends MockeryTestCase
         $registry->shouldReceive('getManager')->once()->andReturn($em);
 
         $config = [
-            'enable_database_logging' => true,
+            'enable_database_logging' => null, // true value will be convert to null on configuration normalization
         ];
 
         $utility = new ApiLogUtility($config, $apiLogQuery, $registry);
@@ -182,7 +204,7 @@ class ApiLogUtilityTest extends MockeryTestCase
         $log = new ApiLog();
 
         $config = [
-            'enable_database_logging' => true,
+            'enable_database_logging' =>  null, // true value will be convert to null on configuration normalization,
         ];
 
         $registry->shouldReceive('getManager')->once()->andReturn($em);
@@ -222,7 +244,7 @@ class ApiLogUtilityTest extends MockeryTestCase
         $registry->shouldReceive('getManager')->once()->andReturn($em);
 
         $config = [
-            'enable_database_logging' => true,
+            'enable_database_logging' =>  null, // true value will be convert to null on configuration normalization,
         ];
 
         $response = new PlainResponse(new Response(200, [], ''), 'get', 'url', []);
@@ -234,4 +256,213 @@ class ApiLogUtilityTest extends MockeryTestCase
 
         $this->assertNotNull($utility->getLogByUuid($response->getUuid()));
     }
+
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\ApiLogUtility::__construct
+     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\ApiLogUtility::isEnabledLoggingFor
+     *
+     * @return void
+     */
+    public function testLoggingIsEnabledExplicitDefinition()
+    {
+        $this->registry->shouldReceive('getManager')->once()->andReturn($this->em);
+
+        $utility = new ApiLogUtility(
+            [
+                'enable_database_logging' => [
+                    'type'     => 'inclusive',
+                    'elements' => [
+                        'bar_api'
+                    ]
+                ]
+            ], 
+            $this->apiLogQuery,
+            $this->registry
+        );
+
+        $this->assertTrue($utility->isEnabledLoggingFor('bar_api'));
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\ApiLogUtility::isEnabledLoggingFor
+     *
+     * @return void
+     */
+    public function testLoggingIsEnabledTildDefinition()
+    {
+        $this->registry->shouldReceive('getManager')->once()->andReturn($this->em);
+
+        $utility = new ApiLogUtility(
+            [
+                'enable_database_logging' => null
+            ],
+            $this->apiLogQuery,
+            $this->registry
+        );
+
+        $this->assertTrue($utility->isEnabledLoggingFor('bar_api'));
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\ApiLogUtility::isEnabledLoggingFor
+     *
+     * @return void
+     */
+    public function testLoggingIsEnabledExclusiveDefinition()
+    {
+        $this->registry->shouldReceive('getManager')->once()->andReturn($this->em);
+
+        $utility = new ApiLogUtility(
+            [
+                'enable_database_logging' => [
+                    'type' => 'exclusive',
+                    'elements' => [
+                        'foo_api'
+                    ]
+                ]
+            ],
+            $this->apiLogQuery,
+            $this->registry
+        );
+
+        $this->assertTrue($utility->isEnabledLoggingFor('bar_api'));
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\ApiLogUtility::isEnabledLoggingFor
+     *
+     * @return void
+     */
+    public function testLoggingIsDisabledExplicitDefinition()
+    {
+        $this->registry->shouldReceive('getManager')->once()->andReturn($this->em);
+
+        $utility = new ApiLogUtility(
+            [
+                'enable_database_logging' => [
+                    'type' => 'exclusive',
+                    'elements' => [
+                        'bar_api'
+                    ]
+                ]
+            ],
+            $this->apiLogQuery,
+            $this->registry
+        );
+
+        $this->assertFalse($utility->isEnabledLoggingFor('bar_api'));
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\ApiLogUtility::isEnabledLoggingFor
+     *
+     * @return void
+     */
+    public function testLoggingIsDisabledByDefault()
+    {
+        $this->registry->shouldReceive('getManager')->once()->andReturn($this->em);
+
+        $utility = new ApiLogUtility(
+            [],
+            $this->apiLogQuery,
+            $this->registry
+        );
+
+        $this->assertFalse($utility->isEnabledLoggingFor('bar_api'));
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\ApiLogUtility::isEnabledLoggingFor
+     *
+     * @return void
+     */
+    public function testLoggingIsDisabledNotDefineApiName()
+    {
+        $this->registry->shouldReceive('getManager')->once()->andReturn($this->em);
+
+        $utility = new ApiLogUtility(
+            [
+                'enable_database_logging' => [
+                    'type' => 'inclusive',
+                    'elements' => [
+                        'foo_api'
+                    ]
+                ]
+            ],
+            $this->apiLogQuery,
+            $this->registry
+        );
+
+        $this->assertFalse($utility->isEnabledLoggingFor('bar_api'));
+    }
+
+    /**
+     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\ApiLogUtility::logResponse
+     *
+     * @return void
+     */
+    public function testLogResponseWithDisabledApi()
+    {
+        $this->registry->shouldReceive('getManager')->once()->andReturn($this->em);
+        $this->em->shouldNotReceive('persist');
+
+        $config = [
+            'enable_database_logging' => [
+                'type'     => 'exclusive',
+                'elements' => [
+                    'foo_api'
+                ]
+            ]
+        ];
+
+        $utility = new ApiLogUtility($config, $this->apiLogQuery, $this->registry);
+        $utility->logResponse(new PlainResponse(new Response(200, [], ''), 'get', 'url', []), 'foo_api');
+    }
+//
+//    /**
+//     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\ApiLogUtility::onRequestExecuted
+//     *
+//     * @return void
+//     */
+//    public function testOnRequestExecutedWithBothLoggingEnabled()
+//    {
+//        $response = new PlainResponse(new Response(500, [], ''), 'get', 'url', []);
+//
+//        $listener = new RequestExecutedListener([
+//            'enable_database_logging' => [
+//                'type' => 'inclusive',
+//                'elements' => [
+//                    'bar_api'
+//                ]
+//            ],
+//            'enable_email_logging' => [
+//                'type' => 'inclusive',
+//                'elements' => [
+//                    'bar_api'
+//                ]
+//            ],
+//        ], $this->apiLogUtility, $this->emailUtility);
+//
+//        $this->apiLogUtility->shouldReceive('logResponse')->once()->with($response);
+//        $this->emailUtility->shouldReceive('sendRequestExecutedNotificationEmail')->once()->with($response);
+//
+//        $listener->onRequestExecuted(new RequestExecutedEvent($response, 'bar_api'));
+//    }
+//
+//    /**
+//     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\ApiLogUtility::onRequestExecuted
+//     *
+//     * @return void
+//     */
+//    public function testOnRequestExecutedWithBothLoggingDisabled()
+//    {
+//        $response = new PlainResponse(new Response(500, [], ''), 'get', 'url', []);
+//
+//        $listener = new RequestExecutedListener([], $this->apiLogUtility, $this->emailUtility);
+//
+//        $this->apiLogUtility->shouldNotReceive('logResponse');
+//        $this->emailUtility->shouldNotReceive('sendRequestExecutedNotificationEmail');
+//
+//        $listener->onRequestExecuted(new RequestExecutedEvent($response, 'bar_api'));
+//    }
 }

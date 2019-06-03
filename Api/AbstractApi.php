@@ -187,6 +187,8 @@ abstract class AbstractApi
     }
 
     /**
+     * The name of the API.
+     *
      * @return string
      */
     public function getName(): string
