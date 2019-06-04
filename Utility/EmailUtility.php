@@ -116,13 +116,12 @@ class EmailUtility
     }
 
     /**
-     * Warning: Will be move in v2.X
-     *
      * Check if email logging for $apiName is enabled
      *
      * @param string $apiName
      *
      * @return boolean
+     * @deprecated Will be moved and refactored in 2.X in RequestExecutedListener::isEnabledLoggingFor(string, string)
      */
     public function isEnabledLoggingFor(string $apiName): bool
     {

@@ -21,11 +21,19 @@ class EmailUtilityTest extends MockeryTestCase
 {
     use DataProviderTrait;
 
-    /** @var \Mockery\MockInterface */
+    /**
+     * @var \Mockery\MockInterface
+     */
     private $mailer;
-    /** @var \Mockery\MockInterface */
+
+    /**
+     * @var \Mockery\MockInterface
+     */
     private $translator;
-    /** @var \Mockery\MockInterface */
+
+    /**
+     * @var \Mockery\MockInterface
+     */
     private $templating;
 
     /**

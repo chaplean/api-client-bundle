@@ -8,12 +8,12 @@ use Chaplean\Bundle\ApiClientBundle\Entity\ApiMethodType;
 use Chaplean\Bundle\ApiClientBundle\Entity\ApiStatusCodeType;
 use Chaplean\Bundle\ApiClientBundle\Query\ApiLogQuery;
 use Chaplean\Bundle\ApiClientBundle\Utility\ApiLogUtility;
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\AbstractQuery;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use GuzzleHttp\Psr7\Response;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
  * Class ApiLogUtilityTest.
@@ -30,20 +30,20 @@ class ApiLogUtilityTest extends MockeryTestCase
     private $apiLogQuery;
 
     /**
-     * @var Registry|\Mockery\MockInterface
+     * @var RegistryInterface|\Mockery\MockInterface
      */
     private $registry;
 
     /**
-     * @var EntityManager|\Mockery\MockInterface
+     * @var EntityManagerInterface|\Mockery\MockInterface
      */
     private $em;
 
     protected function setUp()
     {
         $this->apiLogQuery = \Mockery::mock(ApiLogQuery::class);
-        $this->em = \Mockery::mock(EntityManager::class);
-        $this->registry = \Mockery::mock(Registry::class);
+        $this->em = \Mockery::mock(EntityManagerInterface::class);
+        $this->registry = \Mockery::mock(RegistryInterface::class);
     }
 
     /**
@@ -62,7 +62,7 @@ class ApiLogUtilityTest extends MockeryTestCase
         $apiStatusCodeRepo = \Mockery::mock(EntityRepository::class);
         $apiStatusCodeRepo->shouldReceive('findOneBy')->once()->with(['code' => 200])->andReturn($statusCodeType);
 
-        $em = \Mockery::mock(EntityManager::class);
+        $em = \Mockery::mock(EntityManagerInterface::class);
         $em->shouldReceive('getRepository')->once()->with(ApiMethodType::class)->andReturn($apiMethodRepo);
 
         $em->shouldReceive('getRepository')->once()->with(ApiStatusCodeType::class)->andReturn($apiStatusCodeRepo);
@@ -71,7 +71,7 @@ class ApiLogUtilityTest extends MockeryTestCase
         $em->shouldNotReceive('flush');
 
         $apiLogQuery = \Mockery::mock(ApiLogQuery::class);
-        $registry = \Mockery::mock(Registry::class);
+        $registry = \Mockery::mock(RegistryInterface::class);
         $registry->shouldReceive('getManager')->once()->andReturn($em);
 
         $config = [
@@ -98,7 +98,7 @@ class ApiLogUtilityTest extends MockeryTestCase
         $apiStatusCodeRepo = \Mockery::mock(EntityRepository::class);
         $apiStatusCodeRepo->shouldReceive('findOneBy')->once()->with(['code' => 418])->andReturn($statusCodeType);
 
-        $em = \Mockery::mock(EntityManager::class);
+        $em = \Mockery::mock(EntityManagerInterface::class);
         $em->shouldReceive('getRepository')->once()->with(ApiMethodType::class)->andReturn($apiMethodRepo);
 
         $em->shouldReceive('getRepository')->once()->with(ApiStatusCodeType::class)->andReturn($apiStatusCodeRepo);
@@ -107,7 +107,7 @@ class ApiLogUtilityTest extends MockeryTestCase
         $em->shouldNotReceive('flush');
 
         $apiLogQuery = \Mockery::mock(ApiLogQuery::class);
-        $registry = \Mockery::mock(Registry::class);
+        $registry = \Mockery::mock(RegistryInterface::class);
         $registry->shouldReceive('getManager')->once()->andReturn($em);
 
         $config = [
@@ -165,11 +165,11 @@ class ApiLogUtilityTest extends MockeryTestCase
     public function testDeleteMostRecentThan()
     {
         $date = new \DateTime();
-        $em = \Mockery::mock(EntityManager::class);
+        $em = \Mockery::mock(EntityManagerInterface::class);
         $querySearch = \Mockery::mock(AbstractQuery::class);
         $queryDelete = \Mockery::mock(AbstractQuery::class);
         $apiLogQuery = \Mockery::mock(ApiLogQuery::class);
-        $registry = \Mockery::mock(Registry::class);
+        $registry = \Mockery::mock(RegistryInterface::class);
 
         $config = [
             'enable_database_logging' => true,
@@ -198,8 +198,8 @@ class ApiLogUtilityTest extends MockeryTestCase
     public function testGetResponseByUuidWithoutStoredLogs()
     {
         $apiLogQuery = \Mockery::mock(ApiLogQuery::class);
-        $registry = \Mockery::mock(Registry::class);
-        $em = \Mockery::mock(EntityManager::class);
+        $registry = \Mockery::mock(RegistryInterface::class);
+        $em = \Mockery::mock(EntityManagerInterface::class);
         $repository = \Mockery::mock(EntityRepository::class);
         $log = new ApiLog();
 
@@ -231,7 +231,7 @@ class ApiLogUtilityTest extends MockeryTestCase
         $apiStatusCodeRepo = \Mockery::mock(EntityRepository::class);
         $apiStatusCodeRepo->shouldReceive('findOneBy')->once()->with(['code' => 200])->andReturn($statusCodeType);
 
-        $em = \Mockery::mock(EntityManager::class);
+        $em = \Mockery::mock(EntityManagerInterface::class);
         $em->shouldReceive('getRepository')->once()->with(ApiMethodType::class)->andReturn($apiMethodRepo);
 
         $em->shouldReceive('getRepository')->once()->with(ApiStatusCodeType::class)->andReturn($apiStatusCodeRepo);
@@ -240,7 +240,7 @@ class ApiLogUtilityTest extends MockeryTestCase
         $em->shouldNotReceive('flush');
 
         $apiLogQuery = \Mockery::mock(ApiLogQuery::class);
-        $registry = \Mockery::mock(Registry::class);
+        $registry = \Mockery::mock(RegistryInterface::class);
         $registry->shouldReceive('getManager')->once()->andReturn($em);
 
         $config = [

@@ -11,7 +11,7 @@ use Chaplean\Bundle\ApiClientBundle\Utility\EmailUtility;
  *
  * @package   Chaplean\Bundle\ApiClientBundle\EventListener
  * @author    Matthias - Chaplean <matthias@chaplean.coop>
- * @copyright 2018 Chaplean (http://www.chaplean.coop)
+ * @copyright 2018 Chaplean (https://www.chaplean.coop)
  * @since     1.0.0
  */
 class RequestExecutedListener
