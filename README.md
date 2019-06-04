@@ -351,8 +351,11 @@ The default configuraton is:
 config.yml:
 ```yaml
 chaplean_api_client:
-    enable_database_logging: false # You can define a list of APIs names using chaplean/api-client-bundle (ex: ['foo_api'], ['!foo_api'])
-    enable_email_logging: false # You can define a list of APIs names using chaplean/api-client-bundle (ex: ['foo_api'], ['!foo_api'])
+    # Specify when to log api requests. You can give a boolean to enable or disable globally
+    # or give a white list of clients where logging is only enabled for the listed clients (ex: ['foo_api', 'bar_api'])
+    # or a black list where logging is enabled for all clients excepted those listed (ex: ['!foo_api', '!bar_api']).
+    enable_database_logging: false
+    enable_email_logging: false
     email_logging:
         # Limit emails to the specified codes.
         # You can either use a code directly like 200, 404, ...
