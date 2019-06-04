@@ -8,12 +8,12 @@ use Chaplean\Bundle\ApiClientBundle\Entity\ApiMethodType;
 use Chaplean\Bundle\ApiClientBundle\Entity\ApiStatusCodeType;
 use Chaplean\Bundle\ApiClientBundle\Query\ApiLogQuery;
 use Chaplean\Bundle\ApiClientBundle\Utility\ApiLogUtility;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use GuzzleHttp\Psr7\Response;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
  * Class ApiLogUtilityTest.
@@ -30,7 +30,7 @@ class ApiLogUtilityTest extends MockeryTestCase
     private $apiLogQuery;
 
     /**
-     * @var RegistryInterface|\Mockery\MockInterface
+     * @var Registry|\Mockery\MockInterface
      */
     private $registry;
 
@@ -43,7 +43,7 @@ class ApiLogUtilityTest extends MockeryTestCase
     {
         $this->apiLogQuery = \Mockery::mock(ApiLogQuery::class);
         $this->em = \Mockery::mock(EntityManagerInterface::class);
-        $this->registry = \Mockery::mock(RegistryInterface::class);
+        $this->registry = \Mockery::mock(Registry::class);
     }
 
     /**
@@ -71,7 +71,7 @@ class ApiLogUtilityTest extends MockeryTestCase
         $em->shouldNotReceive('flush');
 
         $apiLogQuery = \Mockery::mock(ApiLogQuery::class);
-        $registry = \Mockery::mock(RegistryInterface::class);
+        $registry = \Mockery::mock(Registry::class);
         $registry->shouldReceive('getManager')->once()->andReturn($em);
 
         $config = [
@@ -107,7 +107,7 @@ class ApiLogUtilityTest extends MockeryTestCase
         $em->shouldNotReceive('flush');
 
         $apiLogQuery = \Mockery::mock(ApiLogQuery::class);
-        $registry = \Mockery::mock(RegistryInterface::class);
+        $registry = \Mockery::mock(Registry::class);
         $registry->shouldReceive('getManager')->once()->andReturn($em);
 
         $config = [
@@ -169,7 +169,7 @@ class ApiLogUtilityTest extends MockeryTestCase
         $querySearch = \Mockery::mock(AbstractQuery::class);
         $queryDelete = \Mockery::mock(AbstractQuery::class);
         $apiLogQuery = \Mockery::mock(ApiLogQuery::class);
-        $registry = \Mockery::mock(RegistryInterface::class);
+        $registry = \Mockery::mock(Registry::class);
 
         $config = [
             'enable_database_logging' => true,
@@ -198,7 +198,7 @@ class ApiLogUtilityTest extends MockeryTestCase
     public function testGetResponseByUuidWithoutStoredLogs()
     {
         $apiLogQuery = \Mockery::mock(ApiLogQuery::class);
-        $registry = \Mockery::mock(RegistryInterface::class);
+        $registry = \Mockery::mock(Registry::class);
         $em = \Mockery::mock(EntityManagerInterface::class);
         $repository = \Mockery::mock(EntityRepository::class);
         $log = new ApiLog();
@@ -240,7 +240,7 @@ class ApiLogUtilityTest extends MockeryTestCase
         $em->shouldNotReceive('flush');
 
         $apiLogQuery = \Mockery::mock(ApiLogQuery::class);
-        $registry = \Mockery::mock(RegistryInterface::class);
+        $registry = \Mockery::mock(Registry::class);
         $registry->shouldReceive('getManager')->once()->andReturn($em);
 
         $config = [
