@@ -3,15 +3,15 @@
 namespace Chaplean\Bundle\ApiClientBundle\EventListener;
 
 use Chaplean\Bundle\ApiClientBundle\Event\RequestExecutedEvent;
-use Chaplean\Bundle\ApiClientBundle\Utility\EmailUtility;
 use Chaplean\Bundle\ApiClientBundle\Utility\ApiLogUtility;
+use Chaplean\Bundle\ApiClientBundle\Utility\EmailUtility;
 
 /**
  * Class RequestExecutedListenerTest.
  *
  * @package   Chaplean\Bundle\ApiClientBundle\EventListener
  * @author    Matthias - Chaplean <matthias@chaplean.coop>
- * @copyright 2018 Chaplean (http://www.chaplean.coop)
+ * @copyright 2018 Chaplean (https://www.chaplean.coop)
  * @since     1.0.0
  */
 class RequestExecutedListener
@@ -49,7 +49,7 @@ class RequestExecutedListener
     {
         $response = $event->getResponse();
 
-        $this->apiLogUtility->logResponse($response);
-        $this->emailUtility->sendRequestExecutedNotificationEmail($response);
+        $this->apiLogUtility->logResponse($response, $event->getApiName());
+        $this->emailUtility->sendRequestExecutedNotificationEmail($response, $event->getApiName());
     }
 }

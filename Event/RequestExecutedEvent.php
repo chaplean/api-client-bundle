@@ -16,6 +16,11 @@ use Symfony\Component\EventDispatcher\Event;
 class RequestExecutedEvent extends Event
 {
     /**
+     * @var string
+     */
+    protected $apiName;
+
+    /**
      * @var ResponseInterface
      */
     protected $response;
@@ -24,9 +29,11 @@ class RequestExecutedEvent extends Event
      * RequestExecutedEvent constructor.
      *
      * @param ResponseInterface $response
+     * @param string            $apiName
      */
-    public function __construct(ResponseInterface $response)
+    public function __construct(ResponseInterface $response, string $apiName)
     {
+        $this->apiName = $apiName;
         $this->response = $response;
     }
 
@@ -35,8 +42,16 @@ class RequestExecutedEvent extends Event
      *
      * @return ResponseInterface
      */
-    public function getResponse()
+    public function getResponse(): ResponseInterface
     {
         return $this->response;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiName(): string
+    {
+        return $this->apiName;
     }
 }

@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.3.0
+
+New features:
+  * Add a `getName` in `AbstractApi`, by default it returns the snake_case class name. It's used in the new feature of `enable_database_logging` and `enable_email_logging` (see below).
+  * New values possible for `enable_database_logging` and `enable_email_logging`, you can list the names of the APIs (see new `AbstractApi:getName`) that you want enabled or not.
+    * Possible values:
+        * `~`: active logging for all API
+        * **Deprecated** `true`: same `~`
+        * `['foo_api']`: active logging only for `foo_api`
+        * `['!foo_api']`: disable logging only for `foo_api`
+        * key not present: disable logging for all
+
 ## 1.2.0
 
 New features:

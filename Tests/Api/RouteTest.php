@@ -65,7 +65,7 @@ class RouteTest extends TestCase
      */
     public function testConstructInvalidArguments()
     {
-        new Route('la méthode', 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        new Route('la méthode', 'url', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
     }
 
     /**
@@ -84,7 +84,7 @@ class RouteTest extends TestCase
             ->with('GET', 'url', ['headers' => [], 'query' => [], 'form_params' => []])
             ->andReturn(new Response());
 
-        $route = new Route(Request::METHOD_GET, '/url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route = new Route(Request::METHOD_GET, '/url', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
 
         $route->exec();
     }
@@ -108,7 +108,7 @@ class RouteTest extends TestCase
             ->with('GET', 'url/with/1/and/2/placeholder', ['headers' => [], 'query' => [], 'form_params' => []])
             ->andReturn(new Response());
 
-        $route = new Route(Request::METHOD_GET, 'url/with/{placeholder}/and/{another}/placeholder', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route = new Route(Request::METHOD_GET, 'url/with/{placeholder}/and/{another}/placeholder', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
         $route->urlParameters(['placeholder' => Parameter::int(), 'another' => Parameter::int()]);
         $route->bindUrlParameters(['placeholder' => 1, 'another' => 2]);
 
@@ -134,7 +134,7 @@ class RouteTest extends TestCase
             ->with('GET', 'url/with/1/and/2.json', ['headers' => [], 'query' => [], 'form_params' => []])
             ->andReturn(new Response());
 
-        $route = new Route(Request::METHOD_GET, 'url/with/{placeholder}/and/{another}.json', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route = new Route(Request::METHOD_GET, 'url/with/{placeholder}/and/{another}.json', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
         $route->urlParameters(['placeholder' => Parameter::int(), 'another' => Parameter::int()]);
         $route->bindUrlParameters(['placeholder' => 1, 'another' => 2]);
 
@@ -154,7 +154,7 @@ class RouteTest extends TestCase
         $this->eventDispatcher->shouldReceive('dispatch')
             ->once();
 
-        $route = new Route(Request::METHOD_GET, 'url/with/{placeholder}/and/{another}/placeholder', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route = new Route(Request::METHOD_GET, 'url/with/{placeholder}/and/{another}/placeholder', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
         $route->urlParameters(['placeholder' => Parameter::int(), 'another' => Parameter::int()]);
 
         $this->assertInstanceOf(InvalidParameterResponse::class, $route->exec());
@@ -195,7 +195,7 @@ class RouteTest extends TestCase
             )
             ->andReturn(new Response());
 
-        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
         $route->headers(['value1' => Parameter::int(), 'value2' => Parameter::int()]);
         $route->queryParameters(['value3' => Parameter::int(), 'value4' => Parameter::int()]);
         $route->bindHeaders(['value1' => 1, 'value2' => 2]);
@@ -217,7 +217,7 @@ class RouteTest extends TestCase
         $this->eventDispatcher->shouldReceive('dispatch')
             ->once();
 
-        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
         $route->headers(['value1' => Parameter::int(), 'value2' => Parameter::int()]);
         $route->queryParameters(['value3' => Parameter::int(), 'value4' => Parameter::int()]);
 
@@ -239,7 +239,7 @@ class RouteTest extends TestCase
         $this->client->shouldReceive('request')->never();
         $this->eventDispatcher->shouldReceive('dispatch')->once();
 
-        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
         $route->headers(['value1' => Parameter::int(), 'value2' => Parameter::int()]);
 
         $response = $route->exec();
@@ -259,7 +259,7 @@ class RouteTest extends TestCase
         $this->client->shouldReceive('request')->once()->andReturn(new Response());
         $this->eventDispatcher->shouldReceive('dispatch')->once();
 
-        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
 
         $response = $route->exec();
 
@@ -279,7 +279,7 @@ class RouteTest extends TestCase
         $this->client->shouldReceive('request')->once()->andReturn(new Response());
         $this->eventDispatcher->shouldReceive('dispatch')->once();
 
-        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
         $route->expectsJson();
 
         $response = $route->exec();
@@ -300,7 +300,7 @@ class RouteTest extends TestCase
         $this->client->shouldReceive('request')->once()->andReturn(new Response());
         $this->eventDispatcher->shouldReceive('dispatch')->once();
 
-        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
         $route->expectsXml();
 
         $response = $route->exec();
@@ -321,7 +321,7 @@ class RouteTest extends TestCase
         $this->client->shouldReceive('request')->once()->andThrow(new TransferException());
         $this->eventDispatcher->shouldReceive('dispatch')->once();
 
-        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
         $route->expectsXml();
 
         $response = $route->exec();
@@ -337,7 +337,7 @@ class RouteTest extends TestCase
      */
     public function testGetUrl()
     {
-        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
 
         $url = $route->getUrl();
 
@@ -355,7 +355,7 @@ class RouteTest extends TestCase
         $globalParameter = new GlobalParameters();
         $globalParameter->urlSuffix('suffix');
 
-        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, $globalParameter);
+        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, $globalParameter, 'foo_api');
 
         $url = $route->getUrl();
 
@@ -371,7 +371,7 @@ class RouteTest extends TestCase
      */
     public function testGetMethod()
     {
-        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
 
         $method = $route->getMethod();
 
@@ -394,7 +394,7 @@ class RouteTest extends TestCase
             ->with('GET', 'url', ['headers' => [], 'query' => [], 'form_params' => []])
             ->andReturn(new Response());
 
-        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
         $route->expectsPlain();
 
         $this->assertInstanceOf(PlainResponse::class, $route->exec());
@@ -416,7 +416,7 @@ class RouteTest extends TestCase
             ->with('GET', 'url', ['headers' => [], 'query' => [], 'form_params' => []])
             ->andReturn(new Response());
 
-        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
         $route->expectsBinary();
 
         $this->assertInstanceOf(BinaryResponse::class, $route->exec());
@@ -433,7 +433,7 @@ class RouteTest extends TestCase
             ->once();
 
         $this->client->shouldReceive('request')->once()->andThrow(RequestException::create(new \GuzzleHttp\Psr7\Request('test', 'get'), new Response(500)));
-        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
 
         $this->assertInstanceOf(AbstractSuccessResponse::class, $route->exec());
     }
@@ -449,7 +449,7 @@ class RouteTest extends TestCase
             ->once();
 
         $this->client->shouldReceive('request')->once()->andThrow(RequestException::create(new \GuzzleHttp\Psr7\Request('test', 'get')));
-        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
 
         $this->assertInstanceOf(AbstractFailureResponse::class, $route->exec());
     }
@@ -489,7 +489,7 @@ class RouteTest extends TestCase
             )
             ->andReturn(new Response());
 
-        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
         $route->headers(['value1' => Parameter::int(), 'value2' => Parameter::int()]);
         $route->queryParameters(['value3' => Parameter::int(), 'value4' => Parameter::int()]);
         $route->requestParameters(['value5' => Parameter::int(), 'value6' => Parameter::int()]);
@@ -529,7 +529,7 @@ class RouteTest extends TestCase
             )
             ->andReturn(new Response());
 
-        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
         $route->requestParameters(['value' => Parameter::int()]);
         $route->sendJson();
         $route->bindRequestParameters(['value' => 42]);
@@ -566,7 +566,7 @@ class RouteTest extends TestCase
             )
             ->andReturn(new Response());
 
-        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
         $route->requestParameters(['value' => Parameter::int()]);
         $route->sendXml();
         $route->bindRequestParameters(['value' => 42]);
@@ -600,7 +600,7 @@ class RouteTest extends TestCase
             )
             ->andReturn(new Response());
 
-        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
         $route->requestParameters(['value' => Parameter::int()]);
         $route->sendJSONString();
         $route->bindRequestParameters(['value' => 42]);
@@ -634,7 +634,7 @@ class RouteTest extends TestCase
             )
             ->andReturn(new Response());
 
-        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
         $route->requestParameters(['value' => Parameter::int()]);
         $route->sendFormUrlEncoded();
         $route->bindRequestParameters(['value' => 42]);
@@ -667,7 +667,7 @@ class RouteTest extends TestCase
             )
             ->andReturn(new Response());
 
-        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
         $route->requestParameters(Parameter::arrayList(Parameter::object(['id' => Parameter::id()])));
         $route->sendJson();
         $route->bindRequestParameters([['id' => 42]]);
@@ -688,7 +688,7 @@ class RouteTest extends TestCase
      */
     public function testAnyParameterAreAllowedInDefiningRoutes()
     {
-        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
 
         $route->headers(Parameter::bool());
         $route->headers(Parameter::int());
@@ -741,7 +741,7 @@ class RouteTest extends TestCase
      */
     public function testInvalidArgumentsToHeaders()
     {
-        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
         $route->headers(42);
     }
 
@@ -755,7 +755,7 @@ class RouteTest extends TestCase
      */
     public function testInvalidArgumentsToUrlParameters()
     {
-        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
         $route->urlParameters(42);
     }
 
@@ -769,7 +769,7 @@ class RouteTest extends TestCase
      */
     public function testInvalidArgumentsToQueryParameters()
     {
-        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
         $route->queryParameters(42);
     }
 
@@ -783,7 +783,7 @@ class RouteTest extends TestCase
      */
     public function testInvalidArgumentsToRequestParameters()
     {
-        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route = new Route(Request::METHOD_POST, 'url', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
         $route->requestParameters(42);
     }
     /**
@@ -814,7 +814,7 @@ class RouteTest extends TestCase
             )
             ->andReturn(new Response());
 
-        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
         $route->queryParameters(['value3' => Parameter::int()])->allowExtraQueryParameters();
         $route->bindQueryParameters(['value3' => 3, 'extra' => 'extra']);
 
@@ -849,7 +849,7 @@ class RouteTest extends TestCase
             )
             ->andReturn(new Response());
 
-        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters());
+        $route = new Route(Request::METHOD_GET, 'url', $this->client, $this->eventDispatcher, new GlobalParameters(), 'foo_api');
         $route->requestParameters(['value3' => Parameter::int()])->allowExtraRequestParameters();
         $route->bindRequestParameters(['value3' => 3, 'extra' => 'extra']);
 

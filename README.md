@@ -351,6 +351,11 @@ The default configuraton is:
 config.yml:
 ```yaml
 chaplean_api_client:
+    # Specify when to log api requests. You can give a boolean to enable or disable globally
+    # or give a white list of clients where logging is only enabled for the listed clients (ex: ['foo_api', 'bar_api'])
+    # or a black list where logging is enabled for all clients excepted those listed (ex: ['!foo_api', '!bar_api'])
+    # or a string of a client where logging is only enabled (ex: 'foo_api') or excepted for this client (ex: '!foo_api')
+    # or a ~ equivalent to true value.
     enable_database_logging: false
     enable_email_logging: false
     email_logging:

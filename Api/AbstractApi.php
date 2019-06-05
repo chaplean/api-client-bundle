@@ -139,7 +139,7 @@ abstract class AbstractApi
      */
     protected function get($name, $url)
     {
-        return $this->addRoute('get', $name, new Route(Request::METHOD_GET, $url, $this->client, $this->eventDispatcher, $this->globalParameters));
+        return $this->addRoute('get', $name, new Route(Request::METHOD_GET, $url, $this->client, $this->eventDispatcher, $this->globalParameters, $this->getName()));
     }
 
     /**
@@ -150,7 +150,7 @@ abstract class AbstractApi
      */
     protected function post($name, $url)
     {
-        return $this->addRoute('post', $name, new Route(Request::METHOD_POST, $url, $this->client, $this->eventDispatcher, $this->globalParameters));
+        return $this->addRoute('post', $name, new Route(Request::METHOD_POST, $url, $this->client, $this->eventDispatcher, $this->globalParameters, $this->getName()));
     }
 
     /**
@@ -161,7 +161,7 @@ abstract class AbstractApi
      */
     protected function put($name, $url)
     {
-        return $this->addRoute('put', $name, new Route(Request::METHOD_PUT, $url, $this->client, $this->eventDispatcher, $this->globalParameters));
+        return $this->addRoute('put', $name, new Route(Request::METHOD_PUT, $url, $this->client, $this->eventDispatcher, $this->globalParameters, $this->getName()));
     }
 
     /**
@@ -172,7 +172,7 @@ abstract class AbstractApi
      */
     protected function patch($name, $url)
     {
-        return $this->addRoute('patch', $name, new Route(Request::METHOD_PATCH, $url, $this->client, $this->eventDispatcher, $this->globalParameters));
+        return $this->addRoute('patch', $name, new Route(Request::METHOD_PATCH, $url, $this->client, $this->eventDispatcher, $this->globalParameters, $this->getName()));
     }
 
     /**
@@ -183,6 +183,17 @@ abstract class AbstractApi
      */
     protected function delete($name, $url)
     {
-        return $this->addRoute('delete', $name, new Route(Request::METHOD_DELETE, $url, $this->client, $this->eventDispatcher, $this->globalParameters));
+        return $this->addRoute('delete', $name, new Route(Request::METHOD_DELETE, $url, $this->client, $this->eventDispatcher, $this->globalParameters, $this->getName()));
+    }
+
+    /**
+     * The name of the API.
+     *
+     * @return string
+     */
+    public function getName(): string
+    {
+        $class = new \ReflectionClass($this);
+        return strtolower(preg_replace(['/([a-z\d])([A-Z])/', '/([^_])([A-Z][a-z])/'], '$1_$2', $class->getShortName()));
     }
 }

@@ -51,11 +51,11 @@ class ApiLogUtility
      */
     public function __construct(array $parameters, ApiLogQuery $apiLogQuery, Registry $registry = null)
     {
-        $this->parameters = $parameters;
         $this->apiLogQuery = $apiLogQuery;
+        $this->parameters = $parameters;
 
         if ($registry === null) {
-            if ($this->parameters['enable_database_logging']) {
+            if (array_key_exists('enable_database_logging', $this->parameters)) {
                 throw new \InvalidArgumentException('Database logging is enabled, you must register the doctrine service');
             }
         } else {
@@ -69,12 +69,13 @@ class ApiLogUtility
      * Persists in database a log entity representing the given $response.
      *
      * @param ResponseInterface $response
+     * @param string|null       $apiName
      *
      * @return void
      */
-    public function logResponse(ResponseInterface $response)
+    public function logResponse(ResponseInterface $response, string $apiName = null)
     {
-        if (!$this->parameters['enable_database_logging']) {
+        if (!$this->isEnabledLoggingFor($apiName ?: '')) {
             return;
         }
 
@@ -142,5 +143,32 @@ class ApiLogUtility
     public function getLogByUuid($uuid)
     {
         return $this->logs[$uuid] ?? $this->em->getRepository(ApiLog::class)->findOneByResponseUuid($uuid);
+    }
+
+    /**
+     * Check if database logging for $apiName is enabled
+     *
+     * @param string $apiName
+     *
+     * @return boolean
+     * @deprecated Will be moved and refactored in 2.X in RequestExecutedListener::isEnabledLoggingFor(string, string)
+     */
+    public function isEnabledLoggingFor(string $apiName): bool
+    {
+        if (!array_key_exists('enable_database_logging', $this->parameters)) {
+            return false;
+        }
+
+        if ($this->parameters['enable_database_logging'] === null) {
+            return true;
+        }
+
+        $isEnabled = in_array($apiName, $this->parameters['enable_database_logging']['elements'], true);
+
+        if ($this->parameters['enable_database_logging']['type'] === 'exclusive') {
+            return !$isEnabled;
+        }
+
+        return $isEnabled;
     }
 }

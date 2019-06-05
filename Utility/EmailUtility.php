@@ -48,7 +48,7 @@ class EmailUtility
     {
         $this->parameters = $parameters;
 
-        if ($this->parameters['enable_email_logging'] && ($mailer === null || $translator === null || $templating === null)) {
+        if (array_key_exists('enable_email_logging', $this->parameters) && ($mailer === null || $translator === null || $templating === null)) {
             throw new \InvalidArgumentException('Email logging is enabled, you must register the mailer, translator and twig services');
         }
 
@@ -61,12 +61,13 @@ class EmailUtility
      * Persists in database a log entity representing the request just ran.
      *
      * @param ResponseInterface $response
+     * @param string|null       $apiName
      *
      * @return void
      */
-    public function sendRequestExecutedNotificationEmail(ResponseInterface $response)
+    public function sendRequestExecutedNotificationEmail(ResponseInterface $response, string $apiName = null)
     {
-        if (!$this->parameters['enable_email_logging']) {
+        if (!$this->isEnabledLoggingFor($apiName ?: '')) {
             return;
         }
 
@@ -112,5 +113,32 @@ class EmailUtility
         }
 
         return false;
+    }
+
+    /**
+     * Check if email logging for $apiName is enabled
+     *
+     * @param string $apiName
+     *
+     * @return boolean
+     * @deprecated Will be moved and refactored in 2.X in RequestExecutedListener::isEnabledLoggingFor(string, string)
+     */
+    public function isEnabledLoggingFor(string $apiName): bool
+    {
+        if (!array_key_exists('enable_email_logging', $this->parameters)) {
+            return false;
+        }
+
+        if ($this->parameters['enable_email_logging'] === null) {
+            return true;
+        }
+
+        $isEnabled = in_array($apiName, $this->parameters['enable_email_logging']['elements'], true);
+
+        if ($this->parameters['enable_email_logging']['type'] === 'exclusive') {
+            return !$isEnabled;
+        }
+
+        return $isEnabled;
     }
 }

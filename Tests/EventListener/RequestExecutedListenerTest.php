@@ -8,8 +8,8 @@ use Chaplean\Bundle\ApiClientBundle\EventListener\RequestExecutedListener;
 use Chaplean\Bundle\ApiClientBundle\Utility\EmailUtility;
 use Chaplean\Bundle\ApiClientBundle\Utility\ApiLogUtility;
 use GuzzleHttp\Psr7\Response;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery\MockInterface;
 
 /**
  * Class RequestExecutedListenerTest.
@@ -19,17 +19,15 @@ use PHPUnit\Framework\TestCase;
  * @copyright 2018 Chaplean (http://www.chaplean.coop)
  * @since     1.0.0
  */
-class RequestExecutedListenerTest extends TestCase
+class RequestExecutedListenerTest extends MockeryTestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
-     * @var ApiLogUtility
+     * @var ApiLogUtility|MockInterface
      */
     protected $apiLogUtility;
 
     /**
-     * @var EmailUtility
+     * @var EmailUtility|MockInterface
      */
     protected $emailUtility;
 
@@ -52,10 +50,10 @@ class RequestExecutedListenerTest extends TestCase
     {
         $response = new PlainResponse(new Response(500, [], ''), 'get', 'url', []);
 
-        $this->apiLogUtility->shouldReceive('logResponse')->with($response);
-        $this->emailUtility->shouldReceive('sendRequestExecutedNotificationEmail')->with($response);
+        $this->apiLogUtility->shouldReceive('logResponse')->with($response, 'bar_api');
+        $this->emailUtility->shouldReceive('sendRequestExecutedNotificationEmail')->with($response, 'bar_api');
 
         $listener = new RequestExecutedListener($this->apiLogUtility, $this->emailUtility);
-        $listener->onRequestExecuted(new RequestExecutedEvent($response));
+        $listener->onRequestExecuted(new RequestExecutedEvent($response, 'bar_api'));
     }
 }
