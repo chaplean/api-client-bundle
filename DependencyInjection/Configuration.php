@@ -20,7 +20,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('chaplean_api_client');
-        $rootNode = $treeBuilder->root('chaplean_api_client');
+        $rootNode = $this->getRootNode($treeBuilder);
 
         $rootNode->children()
                 ->arrayNode('email_logging')
@@ -159,5 +159,18 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
             ->end();
+    }
+
+    /**
+     * @param TreeBuilder $treeBuilder
+     * @return ArrayNodeDefinition|\Symfony\Component\Config\Definition\Builder\NodeDefinition
+     */
+    protected function getRootNode(TreeBuilder $treeBuilder)
+    {
+        if (method_exists($treeBuilder, 'getRootNode')) {
+            return $treeBuilder->getRootNode();
+        }
+
+        return $treeBuilder->root('chaplean_api_client');;
     }
 }
