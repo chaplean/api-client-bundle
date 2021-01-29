@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b44a2926ef2b1617e375783ccee52c69",
+    "content-hash": "54409279e4fdbd14246b6dd82634be33",
     "packages": [
         {
             "name": "eightpoints/guzzle-bundle",
