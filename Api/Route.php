@@ -263,7 +263,11 @@ class Route
     public function exec()
     {
         $response = $this->sendRequest();
-        $this->eventDispatcher->dispatch('chaplean_api_client.request_executed', new RequestExecutedEvent($response, $this->apiName));
+        if (class_exists(\Symfony\Contracts\EventDispatcher\Event::class)) {
+            $this->eventDispatcher->dispatch(new RequestExecutedEvent($response, $this->apiName), 'chaplean_api_client.request_executed');
+        } else {
+            $this->eventDispatcher->dispatch('chaplean_api_client.request_executed', new RequestExecutedEvent($response, $this->apiName));
+        }
 
         return $response;
     }
