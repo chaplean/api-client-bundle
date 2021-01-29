@@ -19,7 +19,7 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
+        $treeBuilder = new TreeBuilder('chaplean_api_client');
         $rootNode = $treeBuilder->root('chaplean_api_client');
 
         $rootNode->children()
