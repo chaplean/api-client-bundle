@@ -39,7 +39,7 @@ class ApiLogUtilityTest extends MockeryTestCase
      */
     private $em;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->apiLogQuery = \Mockery::mock(ApiLogQuery::class);
         $this->em = \Mockery::mock(EntityManagerInterface::class);
@@ -275,7 +275,7 @@ class ApiLogUtilityTest extends MockeryTestCase
                         'bar_api'
                     ]
                 ]
-            ], 
+            ],
             $this->apiLogQuery,
             $this->registry
         );

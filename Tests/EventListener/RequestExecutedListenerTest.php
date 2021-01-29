@@ -34,7 +34,7 @@ class RequestExecutedListenerTest extends MockeryTestCase
     /**
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->apiLogUtility = \Mockery::mock(ApiLogUtility::class);
         $this->emailUtility = \Mockery::mock(EmailUtility::class);
