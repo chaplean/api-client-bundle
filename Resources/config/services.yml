@@ -29,6 +29,5 @@ services:
             $parameters: '%chaplean_api_client.config%'
             $mailer: '@?mailer'
             $translator: '@?translator'
-            $templating: '@?templating.engine.twig'
 
     Chaplean\Bundle\ApiClientBundle\Command\ChapleanApiLogCleanCommand: ~
