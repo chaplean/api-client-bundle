@@ -2,6 +2,7 @@
 
 namespace Chaplean\Bundle\ApiClientBundle\DependencyInjection;
 
+use Chaplean\Bundle\ApiClientBundle\DependencyInjection\CompilerPass\WireMailerCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;

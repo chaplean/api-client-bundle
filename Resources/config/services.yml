@@ -17,7 +17,14 @@ services:
             $parameters: '%chaplean_api_client.config%'
             $registry: '@?doctrine'
 
-    Chaplean\Bundle\ApiClientBundle\Utility\EmailUtility:
+    Chaplean\Bundle\ApiClientBundle\Utility\SwiftMailerEmailUtility:
+        arguments:
+            $parameters: '%chaplean_api_client.config%'
+            $mailer: '@?mailer'
+            $translator: '@?translator'
+            $templating: '@?templating.engine.twig'
+
+    Chaplean\Bundle\ApiClientBundle\Utility\SymfonyMailerEmailUtility:
         arguments:
             $parameters: '%chaplean_api_client.config%'
             $mailer: '@?mailer'

@@ -4,20 +4,20 @@ namespace Tests\Chaplean\Bundle\ApiClientBundle\Utility;
 
 use Chaplean\Bundle\ApiClientBundle\Api\Response\Success\PlainResponse;
 use Chaplean\Bundle\ApiClientBundle\Tests\Resources\DataProviderTrait;
-use Chaplean\Bundle\ApiClientBundle\Utility\EmailUtility;
+use Chaplean\Bundle\ApiClientBundle\Utility\SwiftMailerEmailUtility;
 use GuzzleHttp\Psr7\Response;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Symfony\Bridge\Twig\TwigEngine;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class EmailUtilityTest.
+ * Class SwiftMailerEmailUtilityTest.
  *
  * @author    Matthias - Chaplean <matthias@chaplean.coop>
  * @copyright 2018 Chaplean (http://www.chaplean.coop)
  * @since     1.0.0
  */
-class EmailUtilityTest extends MockeryTestCase
+class SwiftMailerEmailUtilityTest extends MockeryTestCase
 {
     use DataProviderTrait;
 
@@ -49,8 +49,8 @@ class EmailUtilityTest extends MockeryTestCase
     }
 
     /**
-     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\EmailUtility::__construct()
-     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\EmailUtility::isStatusCodeConfiguredForNotifications()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\SwiftMailerEmailUtility::__construct()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\SwiftMailerEmailUtility::isStatusCodeConfiguredForNotifications()
      *
      * @dataProvider statusCodeAndConfigurationForNotificationChecks
      *
@@ -75,15 +75,15 @@ class EmailUtilityTest extends MockeryTestCase
             ],
         ];
 
-        $utility = new EmailUtility($config, $this->mailer, $this->translator, $this->templating);
+        $utility = new SwiftMailerEmailUtility($config, $this->mailer, $this->translator, $this->templating);
         $actualResult = $utility->isStatusCodeConfiguredForNotifications($code);
 
         $this->assertEquals($expectedResult, $actualResult);
     }
 
     /**
-     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\EmailUtility::__construct()
-     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\EmailUtility::sendRequestExecutedNotificationEmail()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\SwiftMailerEmailUtility::__construct()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\SwiftMailerEmailUtility::sendRequestExecutedNotificationEmail()
      *
      * @return void
      */
@@ -102,13 +102,13 @@ class EmailUtilityTest extends MockeryTestCase
             ],
         ];
 
-        $utility = new EmailUtility($config, $this->mailer, $this->translator, $this->templating);
+        $utility = new SwiftMailerEmailUtility($config, $this->mailer, $this->translator, $this->templating);
         $utility->sendRequestExecutedNotificationEmail(new PlainResponse(new Response(501, [], ''), 'get', 'url', []));
     }
 
     /**
-     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\EmailUtility::__construct()
-     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\EmailUtility::sendRequestExecutedNotificationEmail()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\SwiftMailerEmailUtility::__construct()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\SwiftMailerEmailUtility::sendRequestExecutedNotificationEmail()
      *
      * @return void
      */
@@ -125,12 +125,12 @@ class EmailUtilityTest extends MockeryTestCase
             ],
         ];
 
-        $utility = new EmailUtility($config, $this->mailer, $this->translator, $this->templating);
+        $utility = new SwiftMailerEmailUtility($config, $this->mailer, $this->translator, $this->templating);
         $utility->sendRequestExecutedNotificationEmail(new PlainResponse(new Response(204, [], ''), 'get', 'url', []));
     }
 
     /**
-     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\EmailUtility::__construct()
+     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\SwiftMailerEmailUtility::__construct()
      *
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Email logging is enabled, you must register the mailer, translator and twig services
@@ -148,18 +148,18 @@ class EmailUtilityTest extends MockeryTestCase
             ],
         ];
 
-        new EmailUtility($config);
+        new SwiftMailerEmailUtility($config);
     }
 
     /**
-     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\EmailUtility::__construct
-     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\EmailUtility::isEnabledLoggingFor
+     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\SwiftMailerEmailUtility::__construct
+     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\SwiftMailerEmailUtility::isEnabledLoggingFor
      *
      * @return void
      */
     public function testLoggingIsEnabledExplicitDefinition()
     {
-        $utility = new EmailUtility(
+        $utility = new SwiftMailerEmailUtility(
             [
                 'enable_email_logging' => [
                     'type'     => 'inclusive',
@@ -177,13 +177,13 @@ class EmailUtilityTest extends MockeryTestCase
     }
 
     /**
-     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\EmailUtility::isEnabledLoggingFor
+     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\SwiftMailerEmailUtility::isEnabledLoggingFor
      *
      * @return void
      */
     public function testLoggingIsEnabledTildDefinition()
     {
-        $utility = new EmailUtility(
+        $utility = new SwiftMailerEmailUtility(
             [
                 'enable_email_logging' => null
             ],
@@ -196,13 +196,13 @@ class EmailUtilityTest extends MockeryTestCase
     }
 
     /**
-     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\EmailUtility::isEnabledLoggingFor
+     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\SwiftMailerEmailUtility::isEnabledLoggingFor
      *
      * @return void
      */
     public function testLoggingIsEnabledExclusiveDefinition()
     {
-        $utility = new EmailUtility(
+        $utility = new SwiftMailerEmailUtility(
             [
                 'enable_email_logging' => [
                     'type' => 'exclusive',
@@ -220,13 +220,13 @@ class EmailUtilityTest extends MockeryTestCase
     }
 
     /**
-     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\EmailUtility::isEnabledLoggingFor
+     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\SwiftMailerEmailUtility::isEnabledLoggingFor
      *
      * @return void
      */
     public function testLoggingIsDisabledExplicitDefinition()
     {
-        $utility = new EmailUtility(
+        $utility = new SwiftMailerEmailUtility(
             [
                 'enable_email_logging' => [
                     'type' => 'exclusive',
@@ -244,13 +244,13 @@ class EmailUtilityTest extends MockeryTestCase
     }
 
     /**
-     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\EmailUtility::isEnabledLoggingFor
+     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\SwiftMailerEmailUtility::isEnabledLoggingFor
      *
      * @return void
      */
     public function testLoggingIsDisabledByDefault()
     {
-        $utility = new EmailUtility(
+        $utility = new SwiftMailerEmailUtility(
             [],
             $this->mailer,
             $this->translator,
@@ -261,13 +261,13 @@ class EmailUtilityTest extends MockeryTestCase
     }
 
     /**
-     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\EmailUtility::isEnabledLoggingFor
+     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\SwiftMailerEmailUtility::isEnabledLoggingFor
      *
      * @return void
      */
     public function testLoggingIsDisabledNotDefineApiName()
     {
-        $utility = new EmailUtility(
+        $utility = new SwiftMailerEmailUtility(
             [
                 'enable_email_logging' => [
                     'type' => 'inclusive',
@@ -285,7 +285,7 @@ class EmailUtilityTest extends MockeryTestCase
     }
 
     /**
-     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\EmailUtility::sendRequestExecutedNotificationEmail
+     * @covers \Chaplean\Bundle\ApiClientBundle\Utility\SwiftMailerEmailUtility::sendRequestExecutedNotificationEmail
      *
      * @return void
      */
@@ -302,7 +302,7 @@ class EmailUtilityTest extends MockeryTestCase
             ]
         ];
 
-        $utility = new EmailUtility($config, $this->mailer, $this->translator, $this->templating);
+        $utility = new SwiftMailerEmailUtility($config, $this->mailer, $this->translator, $this->templating);
         $utility->sendRequestExecutedNotificationEmail(new PlainResponse(new Response(200, [], ''), 'get', 'url', []), 'foo_api');
     }
 }

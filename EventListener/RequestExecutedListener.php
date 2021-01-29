@@ -4,7 +4,7 @@ namespace Chaplean\Bundle\ApiClientBundle\EventListener;
 
 use Chaplean\Bundle\ApiClientBundle\Event\RequestExecutedEvent;
 use Chaplean\Bundle\ApiClientBundle\Utility\ApiLogUtility;
-use Chaplean\Bundle\ApiClientBundle\Utility\EmailUtility;
+use Chaplean\Bundle\ApiClientBundle\Utility\EmailUtilityInterface;
 
 /**
  * Class RequestExecutedListenerTest.
@@ -22,7 +22,7 @@ class RequestExecutedListener
     protected $apiLogUtility;
 
     /**
-     * @var EmailUtility
+     * @var EmailUtilityInterface
      */
     protected $emailUtility;
 
@@ -30,9 +30,9 @@ class RequestExecutedListener
      * RequestExecutedListener constructor.
      *
      * @param ApiLogUtility $apiLogUtility
-     * @param EmailUtility  $emailUtility
+     * @param EmailUtilityInterface  $emailUtility
      */
-    public function __construct(ApiLogUtility $apiLogUtility, EmailUtility $emailUtility)
+    public function __construct(ApiLogUtility $apiLogUtility, EmailUtilityInterface $emailUtility)
     {
         $this->apiLogUtility = $apiLogUtility;
         $this->emailUtility = $emailUtility;
