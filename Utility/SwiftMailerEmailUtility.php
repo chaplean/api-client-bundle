@@ -7,14 +7,14 @@ use Symfony\Bridge\Twig\TwigEngine;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class EmailUtility.
+ * Class SwiftMailerEmailUtility.
  *
  * @package   Chaplean\Bundle\ApiClientBundle\Utility
  * @author    Matthias - Chaplean <matthias@chaplean.coop>
  * @copyright 2018 Chaplean (http://www.chaplean.coop)
  * @since     1.0.0
  */
-class EmailUtility
+class SwiftMailerEmailUtility implements EmailUtilityInterface
 {
     /**
      * @var array
@@ -44,7 +44,7 @@ class EmailUtility
      * @param TranslatorInterface $translator
      * @param TwigEngine          $templating
      */
-    public function __construct(array $parameters, \Swift_Mailer $mailer = null, TranslatorInterface $translator = null, TwigEngine $templating = null)
+    public function __construct(array $parameters, \Swift_Mailer $mailer = null, /** TranslatorInterface */ $translator = null, TwigEngine $templating = null)
     {
         $this->parameters = $parameters;
 

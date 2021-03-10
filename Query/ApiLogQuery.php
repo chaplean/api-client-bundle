@@ -5,6 +5,7 @@ namespace Chaplean\Bundle\ApiClientBundle\Query;
 use Chaplean\Bundle\ApiClientBundle\Entity\ApiLog;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -24,9 +25,9 @@ class ApiLogQuery
     /**
      * ApiLogQuery constructor.
      *
-     * @param RegistryInterface $registry
+     * @param RegistryInterface|ManagerRegistry $registry
      */
-    public function __construct(RegistryInterface $registry)
+    public function __construct(/** ManagerRegistry */$registry)
     {
         $this->em = $registry->getManager();
     }
